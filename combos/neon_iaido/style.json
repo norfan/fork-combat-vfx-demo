@@ -1,0 +1,51 @@
+{
+  "title": "电磁居合·一闪",
+  "language": "zh",
+  "thickness": 1.0,
+  "pixel": 3,
+  "description": "蓄力后瞬移穿过目标，三道切口在高光中炸开，收刀一斩定格。",
+  "palettes": {
+    "normal": [
+      "ffffff",
+      "b8fbff",
+      "17d8ff",
+      "0a2f6b"
+    ],
+    "violet": [
+      "fff2ff",
+      "ff9df3",
+      "f513c8",
+      "4a0740"
+    ],
+    "gold": [
+      "fffef0",
+      "f4ff9d",
+      "ffe600",
+      "66520a"
+    ],
+    "green": [
+      "f2ffe8",
+      "b6ff72",
+      "2bff8a",
+      "0b4a33"
+    ],
+    "red": [
+      "fff0f6",
+      "ff8fb4",
+      "ff1f5a",
+      "52000f"
+    ]
+  },
+  "colors": {
+    "background": "0a0713",
+    "ground": "7a4dff",
+    "outline": "04050a",
+    "flash": "ffffff",
+    "dummy": "2f3a5e",
+    "dummy_band": "17d8ff",
+    "blade": "b8fbff",
+    "marker_core": "17d8ff",
+    "text": "d6e2ff",
+    "text_gold": "f513c8"
+  }
+}

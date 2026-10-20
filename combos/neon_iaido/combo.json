@@ -1,0 +1,92 @@
+{
+  "name": "电磁居合: 蓄力, 一闪, 三连切, 终结",
+  "events": [
+    {
+      "t": 0.0,
+      "do": "charge"
+    },
+    {
+      "t": 0.32,
+      "do": "flash_step",
+      "past": 150
+    },
+    {
+      "t": 0.48,
+      "do": "cut",
+      "angle": -32
+    },
+    {
+      "t": 0.48,
+      "do": "hit",
+      "push": 30,
+      "stop": 0.05,
+      "shake": 2.6,
+      "spark": 46
+    },
+    {
+      "t": 0.56,
+      "do": "cut",
+      "angle": 30
+    },
+    {
+      "t": 0.56,
+      "do": "hit",
+      "push": 30,
+      "stop": 0.05,
+      "shake": 2.8,
+      "spark": 48
+    },
+    {
+      "t": 0.64,
+      "do": "cut",
+      "angle": 88,
+      "palette": "violet"
+    },
+    {
+      "t": 0.64,
+      "do": "hit",
+      "push": 30,
+      "stop": 0.05,
+      "shake": 3.0,
+      "spark": 50,
+      "palette": "violet"
+    },
+    {
+      "t": 0.78,
+      "do": "slash",
+      "radius": 212,
+      "squash": 0.5,
+      "tilt": 4,
+      "from": 92,
+      "to": 268,
+      "width": 72,
+      "palette": "violet"
+    },
+    {
+      "t": 0.78,
+      "do": "cut",
+      "angle": -2,
+      "palette": "violet"
+    },
+    {
+      "t": 0.79,
+      "do": "hit",
+      "push": 260,
+      "launch": 950,
+      "stop": 0.155,
+      "shake": 9.5,
+      "spark": 125,
+      "palette": "violet",
+      "finisher": true
+    },
+    {
+      "t": 0.94,
+      "do": "move",
+      "by": [
+        -140,
+        0
+      ],
+      "time": 0.2
+    }
+  ]
+}

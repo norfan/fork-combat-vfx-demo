@@ -73,7 +73,7 @@ func _rebuild() -> void:
 	hint.add_theme_font_size_override("font_size", 20)
 	hint.add_theme_color_override("font_color", ComboStyle.c("text"))
 	_overlay.add_child(hint)
-	demo = ComboStage.new()
+	demo = load("res://vfx/ink_stage.gd").new() if ComboStyle.data.get("renderer", "") == "ink" else ComboStage.new()
 	demo.combo_file = combo_file
 	add_child(demo)
 

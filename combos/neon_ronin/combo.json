@@ -1,0 +1,150 @@
+{
+  "name": "赛博浪人: 横斩, 竖劈, 斜斩, 上挑, 空中终结下劈",
+  "events": [
+    {
+      "t": 0.0,
+      "do": "slash",
+      "radius": 168,
+      "squash": 0.55,
+      "from": -80,
+      "to": 70,
+      "width": 46
+    },
+    {
+      "t": 0.04,
+      "do": "hit",
+      "push": 70,
+      "stop": 0.08,
+      "shake": 4.2,
+      "spark": 62
+    },
+    {
+      "t": 0.36,
+      "do": "move",
+      "by": [
+        18,
+        0
+      ],
+      "time": 0.06
+    },
+    {
+      "t": 0.36,
+      "do": "slash",
+      "radius": 172,
+      "squash": 1.0,
+      "from": -112,
+      "to": 70,
+      "width": 54
+    },
+    {
+      "t": 0.4,
+      "do": "hit",
+      "push": 90,
+      "stop": 0.055,
+      "shake": 3.0,
+      "spark": 52
+    },
+    {
+      "t": 0.56,
+      "do": "slash",
+      "radius": 162,
+      "squash": 0.7,
+      "tilt": 26,
+      "from": -100,
+      "to": 55,
+      "width": 42,
+      "palette": "violet"
+    },
+    {
+      "t": 0.6,
+      "do": "hit",
+      "push": 50,
+      "stop": 0.04,
+      "shake": 2.2,
+      "spark": 46,
+      "palette": "violet"
+    },
+    {
+      "t": 0.7,
+      "do": "move",
+      "by": [
+        16,
+        0
+      ],
+      "time": 0.05
+    },
+    {
+      "t": 0.7,
+      "do": "slash",
+      "radius": 170,
+      "squash": 1.0,
+      "from": 92,
+      "to": -116,
+      "width": 58,
+      "palette": "gold"
+    },
+    {
+      "t": 0.74,
+      "do": "hit",
+      "push": 25,
+      "launch": -620,
+      "stop": 0.07,
+      "shake": 4.2,
+      "spark": 58,
+      "palette": "gold"
+    },
+    {
+      "t": 0.86,
+      "do": "move",
+      "by": [
+        26,
+        -140
+      ],
+      "time": 0.12
+    },
+    {
+      "t": 0.98,
+      "do": "charge"
+    },
+    {
+      "t": 1.24,
+      "do": "move",
+      "by": [
+        20,
+        10
+      ],
+      "time": 0.06
+    },
+    {
+      "t": 1.24,
+      "do": "slash",
+      "radius": 190,
+      "squash": 0.92,
+      "tilt": 8,
+      "from": -125,
+      "to": 88,
+      "width": 74,
+      "palette": "violet"
+    },
+    {
+      "t": 1.29,
+      "do": "hit",
+      "push": 250,
+      "launch": 980,
+      "stop": 0.155,
+      "shake": 9.8,
+      "spark": 128,
+      "palette": "violet",
+      "finisher": true
+    },
+    {
+      "t": 1.44,
+      "do": "move",
+      "by": [
+        -26,
+        132
+      ],
+      "time": 0.14
+    }
+  ]
+}

@@ -104,7 +104,8 @@ def main(argv=None) -> int:
         step = max(1, math.ceil(count / 18))  # frames_to_review shows at most 18 tiles
         subprocess.run([sys.executable, str(HERE / "frames_to_review.py"), str(frames), str(shots / "combo_sheet.png"),
                         "--every", str(step), "--columns", "6", "--scale", "0.35"], check=False)
-        subprocess.run([sys.executable, str(HERE / "frames_to_gif.py"), str(frames), "combo"], check=False)
+        subprocess.run([sys.executable, str(HERE / "frames_to_gif.py"), str(frames), "combo"]
+                       + (["--keep"] if args.keep_frames else []), check=False)
         for gif in frames.glob("*.gif"):
             shutil.move(str(gif), shots / gif.name)
         if not args.keep_frames:

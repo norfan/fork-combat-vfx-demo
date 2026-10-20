@@ -1,0 +1,208 @@
+{
+  "name": "过载突刺: 四连刺, 双向回旋, 终结突刺",
+  "events": [
+    {
+      "t": 0.0,
+      "do": "move",
+      "by": [
+        14,
+        0
+      ],
+      "time": 0.05
+    },
+    {
+      "t": 0.0,
+      "do": "slash",
+      "radius": 228,
+      "squash": 0.15,
+      "tilt": -6,
+      "from": -62,
+      "to": 64,
+      "width": 84
+    },
+    {
+      "t": 0.03,
+      "do": "hit",
+      "push": 40,
+      "stop": 0.045,
+      "shake": 2.2,
+      "spark": 44
+    },
+    {
+      "t": 0.12,
+      "do": "move",
+      "by": [
+        12,
+        0
+      ],
+      "time": 0.05
+    },
+    {
+      "t": 0.12,
+      "do": "slash",
+      "radius": 242,
+      "squash": 0.13,
+      "tilt": 8,
+      "from": 64,
+      "to": -62,
+      "width": 90
+    },
+    {
+      "t": 0.15,
+      "do": "hit",
+      "push": 40,
+      "stop": 0.045,
+      "shake": 2.4,
+      "spark": 46
+    },
+    {
+      "t": 0.24,
+      "do": "move",
+      "by": [
+        12,
+        0
+      ],
+      "time": 0.05
+    },
+    {
+      "t": 0.24,
+      "do": "slash",
+      "radius": 256,
+      "squash": 0.16,
+      "tilt": -3,
+      "from": -66,
+      "to": 66,
+      "width": 96
+    },
+    {
+      "t": 0.27,
+      "do": "hit",
+      "push": 45,
+      "stop": 0.05,
+      "shake": 2.6,
+      "spark": 48
+    },
+    {
+      "t": 0.36,
+      "do": "move",
+      "by": [
+        14,
+        0
+      ],
+      "time": 0.05
+    },
+    {
+      "t": 0.36,
+      "do": "slash",
+      "radius": 272,
+      "squash": 0.12,
+      "tilt": 9,
+      "from": 66,
+      "to": -66,
+      "width": 104
+    },
+    {
+      "t": 0.39,
+      "do": "hit",
+      "push": 45,
+      "stop": 0.05,
+      "shake": 2.8,
+      "spark": 50
+    },
+    {
+      "t": 0.58,
+      "do": "slash",
+      "radius": 176,
+      "squash": 0.45,
+      "tilt": 3,
+      "from": -90,
+      "to": 90,
+      "width": 48,
+      "palette": "green"
+    },
+    {
+      "t": 0.61,
+      "do": "hit",
+      "push": 60,
+      "stop": 0.07,
+      "shake": 3.6,
+      "spark": 58,
+      "palette": "green"
+    },
+    {
+      "t": 0.66,
+      "do": "slash",
+      "radius": 162,
+      "squash": 0.42,
+      "tilt": -3,
+      "from": 90,
+      "to": 270,
+      "width": 42,
+      "palette": "green"
+    },
+    {
+      "t": 0.74,
+      "do": "slash",
+      "radius": 188,
+      "squash": 0.48,
+      "tilt": 4,
+      "from": 270,
+      "to": 450,
+      "width": 52,
+      "palette": "green"
+    },
+    {
+      "t": 0.77,
+      "do": "hit",
+      "push": 60,
+      "stop": 0.075,
+      "shake": 4.0,
+      "spark": 62,
+      "palette": "green"
+    },
+    {
+      "t": 0.86,
+      "do": "charge"
+    },
+    {
+      "t": 1.14,
+      "do": "move",
+      "by": [
+        34,
+        0
+      ],
+      "time": 0.06
+    },
+    {
+      "t": 1.14,
+      "do": "slash",
+      "radius": 250,
+      "squash": 0.15,
+      "tilt": -3,
+      "from": -85,
+      "to": 82,
+      "width": 132,
+      "palette": "violet"
+    },
+    {
+      "t": 1.18,
+      "do": "hit",
+      "push": 300,
+      "launch": 980,
+      "stop": 0.155,
+      "shake": 9.5,
+      "spark": 130,
+      "palette": "violet",
+      "finisher": true
+    },
+    {
+      "t": 1.32,
+      "do": "move",
+      "by": [
+        -24,
+        0
+      ],
+      "time": 0.14
+    }
+  ]
+}

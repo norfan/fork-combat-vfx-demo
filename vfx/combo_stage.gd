@@ -186,7 +186,7 @@ func advance(delta: float) -> void:
 	_update_target(delta)
 	for holder in [fx, attacker]:
 		for part in holder.get_children():
-			if not part is PixelSlash: continue
+			if not part.has_method("advance"): continue
 			part.advance(delta)
 			if part.is_done(): part.queue_free()
 	_refresh()

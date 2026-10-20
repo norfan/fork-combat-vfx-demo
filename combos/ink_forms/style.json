@@ -1,0 +1,20 @@
+{
+  "title": "墨势六式 · 起承转合",
+  "language": "zh",
+  "renderer": "ink",
+  "pixel": 1,
+  "thickness": 1,
+  "colors": {
+    "background": "eee8d8",
+    "ground": "a6a894",
+    "outline": "eee8d8",
+    "blade": "293b30",
+    "marker_core": "707761",
+    "dummy": "b7b5a0",
+    "dummy_band": "858d78",
+    "flash": "b7b5a0",
+    "text": "424d40",
+    "text_gold": "914939"
+  },
+  "palettes": {}
+}

@@ -1,0 +1,131 @@
+{
+  "name": "墨势六式",
+  "events": [
+    {
+      "t": 0.42,
+      "do": "move",
+      "by": [
+        16,
+        0
+      ],
+      "time": 0.1
+    },
+    {
+      "t": 0.48,
+      "do": "slash",
+      "ink_kind": "dry",
+      "width": 18
+    },
+    {
+      "t": 0.52,
+      "do": "hit",
+      "push": 45,
+      "stop": 0.045,
+      "shake": 1.5
+    },
+    {
+      "t": 1.14,
+      "do": "slash",
+      "ink_kind": "elbow",
+      "width": 28
+    },
+    {
+      "t": 1.18,
+      "do": "hit",
+      "push": 65,
+      "stop": 0.075,
+      "shake": 2.4
+    },
+    {
+      "t": 1.66,
+      "do": "slash",
+      "ink_kind": "dot",
+      "width": 15,
+      "tilt": -35
+    },
+    {
+      "t": 1.7,
+      "do": "hit",
+      "push": 30,
+      "stop": 0.025,
+      "shake": 1.2
+    },
+    {
+      "t": 1.79,
+      "do": "slash",
+      "ink_kind": "dot",
+      "width": 18,
+      "tilt": 26
+    },
+    {
+      "t": 1.83,
+      "do": "hit",
+      "push": 35,
+      "stop": 0.025,
+      "shake": 1.5
+    },
+    {
+      "t": 1.92,
+      "do": "slash",
+      "ink_kind": "dot",
+      "width": 21,
+      "tilt": 0
+    },
+    {
+      "t": 1.96,
+      "do": "hit",
+      "push": 50,
+      "stop": 0.035,
+      "shake": 1.8
+    },
+    {
+      "t": 2.49,
+      "do": "slash",
+      "ink_kind": "coil",
+      "width": 27
+    },
+    {
+      "t": 2.53,
+      "do": "hit",
+      "push": 65,
+      "stop": 0.08,
+      "shake": 3
+    },
+    {
+      "t": 3.05,
+      "do": "charge"
+    },
+    {
+      "t": 3.05,
+      "do": "move",
+      "by": [
+        -14,
+        0
+      ],
+      "time": 0.18
+    },
+    {
+      "t": 4.02,
+      "do": "move",
+      "by": [
+        32,
+        0
+      ],
+      "time": 0.1
+    },
+    {
+      "t": 4.08,
+      "do": "slash",
+      "ink_kind": "fall",
+      "width": 62
+    },
+    {
+      "t": 4.12,
+      "do": "hit",
+      "push": 230,
+      "stop": 0.15,
+      "shake": 5.5,
+      "finisher": true
+    }
+  ]
+}
