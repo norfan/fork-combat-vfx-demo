@@ -73,7 +73,15 @@ func _rebuild() -> void:
 	hint.add_theme_font_size_override("font_size", 20)
 	hint.add_theme_color_override("font_color", ComboStyle.c("text"))
 	_overlay.add_child(hint)
-	demo = load("res://vfx/ink_stage.gd").new() if ComboStyle.data.get("renderer", "") == "ink" else ComboStage.new()
+	# "renderer": "<name>" in style.json picks res://vfx/<name>_stage.gd (a ComboStage subclass);
+	# no renderer means the stock pixel smears.
+	var renderer := String(ComboStyle.data.get("renderer", ""))
+	if renderer.is_empty():
+		demo = ComboStage.new()
+	else:
+		var stage_path := "res://vfx/%s_stage.gd" % renderer
+		assert(ResourceLoader.exists(stage_path), "Unknown renderer '%s': %s is missing" % [renderer, stage_path])
+		demo = load(stage_path).new()
 	demo.combo_file = combo_file
 	add_child(demo)
 

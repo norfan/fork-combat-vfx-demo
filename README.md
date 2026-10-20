@@ -16,11 +16,13 @@ play it on loop. Keys: 1/Space replay, 2 slow motion, R reset, Esc back to the g
 
 ```
 project.godot   main.tscn (gallery)
-vfx/            the effect code: combo_player.gd (scene root), combo_stage.gd (the combo),
-                pixel_slash.gd (the renderer), combo_style.gd (colours), gallery.gd
+vfx/            the effect code: combo_player.gd (scene root), combo_stage.gd (the combo and
+                the stock pixel renderer), pixel_slash.gd (pixel smears), combo_style.gd
+                (colours), gallery.gd; ink_stage.gd + ink_stroke.gd (the ink renderer)
 combos/<name>/  <name>.tscn, combo.json (the events), style.json (the look), prompt.md
 styles/         style presets: default, ember, neon, ink
-tools/          new_combo.py, verify_combo.py, frames_to_gif.py, frames_to_review.py
+tools/          new_combo.py, verify_combo.py, frames_to_gif.py, frames_to_review.py,
+                verify_ink_forms.gd; capture_promo.gd, build_promo.py, review_promo.py (promo video)
 references/     combo_events.md (format), choreography.md (request → events)
 media/          the GIFs and frame sheets shown below
 SKILL.md        agent instructions
@@ -58,6 +60,21 @@ Each folder in [combos/](combos) holds the prompt (`prompt.md`), the `combo.json
 > 冰霜剑士：先四下极快的连续突刺，停一拍后旋风斩转两圈，然后上挑把敌人挑飞，追上去空中乱斩三刀，最后一记重劈砸回地面。节奏 快快快快 慢 中 快快快 重。冰蓝配白，细刀光，像素颗粒粗一点。
 
 ![Frost swordsman](media/frost_swordsman.gif)
+
+### Cyberpunk set — [neon_ronin](combos/neon_ronin), [neon_iaido](combos/neon_iaido), [neon_overdrive](combos/neon_overdrive)
+
+Three combos on the `neon` preset: a five-cut ronin string, an electromagnetic iaido
+flash, and a seven-hit overload thrust chain.
+
+![Cyber ronin](media/neon_ronin.gif) ![Electromagnetic iaido](media/neon_iaido.gif) ![Overload thrust](media/neon_overdrive.gif)
+
+### Ink forms — [combos/ink_forms](combos/ink_forms)
+
+Six forms, seven hits, drawn by a separate brush renderer (`"renderer": "ink"`): pressure
+strokes, dry-brush gaps, ink drops and splashes instead of crescents and stars. See
+[its README](combos/ink_forms/README.md) and the [move design](combos/ink_forms/design.md).
+
+![Ink forms](media/ink_forms.gif)
 
 ## Prompt guide: which words give which effect
 
@@ -97,6 +114,39 @@ This adds `combos/my_combo/my_combo.tscn` to this project (it shows up in the ga
 or makes a fresh demo project if DIR is new or empty. `--media` on verify_combo.py copies
 the GIF and sheet into `media/`. Event format:
 [references/combo_events.md](references/combo_events.md).
+
+## Your own renderer
+
+The style presets (`default`, `ember`, `neon`, `ink`) only change colours, width and pixel
+size. If you want a different *way of drawing* — brush ink, paper cut-outs, vector glow,
+hand-painted sprite frames — add a renderer. The event timeline, hit-stop, knockback,
+shake, replay keys, slow motion, frame capture and self-test are shared; a renderer only
+decides what each event draws.
+
+1. **Stage** — `vfx/<name>_stage.gd`, `extends ComboStage` (keep `@tool`). Override what
+   you want drawn differently and leave the rest to `super`:
+   - `_fire(event)`: `slash`, `charge`, `flash_step`, `cut` … (anything you skip →
+     `super._fire(event)`);
+   - `_hit(event)`: the contact. Keep the stock bookkeeping — `hits += 1`,
+     `_target_velocity`, `_stop = event.stop`, `_shake(...)` — or the self-test and hit
+     feel break;
+   - `_draw()` / `_refresh()`: background and on-screen text, if the look needs them.
+2. **Effect nodes** — what you spawn. Any `Node2D` added under `fx` (stage space) or
+   `attacker` (follows the attacker) works if it has `advance(delta)` and `is_done()`:
+   the stage steps it on the combo clock (so hit-stop and slow motion freeze it too) and
+   frees it when done. Draw in `_draw()`; don't use `_process` or wall-clock time.
+3. **Select it** — put `"renderer": "<name>"` in the combo's `style.json`;
+   `combo_player.gd` then loads `vfx/<name>_stage.gd`. Without the key the stock pixel
+   renderer is used.
+4. **Extra event fields** — your stage may read its own keys from `combo.json` (the ink
+   renderer reads `ink_kind`); other renderers ignore them.
+5. **Check** — `verify_combo.py <combo> --gif` still runs the hit-count self-test and the
+   frame sheet. Add renderer-specific checks as a script like `tools/verify_ink_forms.gd`.
+
+The ink renderer is the worked example: [vfx/ink_stage.gd](vfx/ink_stage.gd) (~100 lines)
+and [vfx/ink_stroke.gd](vfx/ink_stroke.gd) (~120 lines). An agent can do it for you: ask
+for "a new renderer in X style, don't recolour the existing smears" and point it at this
+section.
 
 ## License
 

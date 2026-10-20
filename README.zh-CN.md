@@ -15,11 +15,13 @@
 
 ```
 project.godot   main.tscn（画廊）
-vfx/            特效代码：combo_player.gd（场景根节点）、combo_stage.gd（连招）、
-                pixel_slash.gd（渲染器）、combo_style.gd（配色）、gallery.gd
+vfx/            特效代码：combo_player.gd（场景根节点）、combo_stage.gd（连招与默认像素绘制器）、
+                pixel_slash.gd（像素刀光）、combo_style.gd（配色）、gallery.gd；
+                ink_stage.gd + ink_stroke.gd（水墨绘制器）
 combos/<名字>/  <名字>.tscn、combo.json（事件）、style.json（风格）、prompt.md（提示词）
 styles/         风格预设：default、ember、neon、ink
-tools/          new_combo.py、verify_combo.py、frames_to_gif.py、frames_to_review.py
+tools/          new_combo.py、verify_combo.py、frames_to_gif.py、frames_to_review.py、
+                verify_ink_forms.gd；capture_promo.gd、build_promo.py、review_promo.py（宣传视频）
 references/     combo_events.md（格式）、choreography.md（需求 → 事件）
 media/          下面展示用的 GIF 和逐帧拼图
 SKILL.md        代理说明
@@ -54,6 +56,19 @@ SKILL.md        代理说明
 > 冰霜剑士：先四下极快的连续突刺，停一拍后旋风斩转两圈，然后上挑把敌人挑飞，追上去空中乱斩三刀，最后一记重劈砸回地面。节奏 快快快快 慢 中 快快快 重。冰蓝配白，细刀光，像素颗粒粗一点。
 
 ![冰霜剑士](media/frost_swordsman.gif)
+
+### 赛博三连 — [neon_ronin](combos/neon_ronin)、[neon_iaido](combos/neon_iaido)、[neon_overdrive](combos/neon_overdrive)
+
+基于 `neon` 预设：赛博浪人·五连斩、电磁居合·一闪、过载突刺·七连。
+
+![赛博浪人](media/neon_ronin.gif) ![电磁居合](media/neon_iaido.gif) ![过载突刺](media/neon_overdrive.gif)
+
+### 墨势六式 — [combos/ink_forms](combos/ink_forms)
+
+六式七击，由独立的水墨绘制器（`"renderer": "ink"`）绘制：压力笔腹、飞白、墨滴和泼墨，不用月牙和星芒。
+见[它的说明](combos/ink_forms/README.md)和[出招设计](combos/ink_forms/design.md)。
+
+![墨势六式](media/ink_forms.gif)
 
 ## 提示词对照：什么说法对应哪组特效
 
@@ -99,6 +114,28 @@ verify_combo.py 加 `--media` 会把 GIF 和拼图复制到 `media/`。事件格
 - `--prompt`：提示词原文，存为 prompt.md；
 - `--palette NAME=色,色,色,色`：替换一套刀光色板，从亮到暗；
 - `--color 角色=色`：替换场景颜色。
+
+## 自定义绘制器
+
+风格预设（`default`、`ember`、`neon`、`ink`）只改颜色、粗细和像素颗粒。如果不喜欢现成的画法，
+想换一种**绘制方式**（水墨、剪纸、矢量辉光、手绘序列帧……），就加一个绘制器。
+事件时间轴、顿帧、击退、震屏、重播按键、慢放、录帧和自检都是共用的，绘制器只决定每个事件画成什么。
+
+1. **舞台脚本**：新建 `vfx/<名字>_stage.gd`，`extends ComboStage`（保留 `@tool`）。只重写想换画法的部分，其余交给 `super`：
+   - `_fire(event)`：`slash`、`charge`、`flash_step`、`cut` 等；不处理的事件调用 `super._fire(event)`；
+   - `_hit(event)`：命中。保留默认实现里的记账——`hits += 1`、`_target_velocity`、`_stop = event.stop`、`_shake(...)`——否则自检和打击感会坏；
+   - `_draw()` / `_refresh()`：需要时换背景和画面文字。
+2. **特效节点**：你生成的笔触、火花等。任何 `Node2D` 加到 `fx`（舞台坐标）或 `attacker`（跟随攻击方）下，
+   只要有 `advance(delta)` 和 `is_done()` 就行：舞台按连招时钟推进它（顿帧和慢放也会冻结它），结束后自动释放。
+   在 `_draw()` 里画，不要用 `_process` 或真实时间。
+3. **启用**：在连招的 `style.json` 里写 `"renderer": "<名字>"`，`combo_player.gd` 就会加载 `vfx/<名字>_stage.gd`；
+   不写就用默认像素绘制器。
+4. **自定义事件字段**：舞台可以读 `combo.json` 里自己的字段（水墨绘制器读 `ink_kind`），其他绘制器会忽略。
+5. **检查**：`verify_combo.py <连招> --gif` 照样跑命中数自检和逐帧拼图；绘制器特有的检查可以仿照
+   `tools/verify_ink_forms.gd` 另写脚本。
+
+水墨绘制器就是现成的范例：[vfx/ink_stage.gd](vfx/ink_stage.gd)（约 100 行）和 [vfx/ink_stroke.gd](vfx/ink_stroke.gd)（约 120 行）。
+也可以让代理来做：说“新做一个 X 风格的绘制器，不要给现有刀光换色”，并让它参考这一节。
 
 ## 许可
 
