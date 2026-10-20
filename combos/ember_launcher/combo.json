@@ -1,0 +1,135 @@
+{
+  "name": "sample: thrust, X-cross, rising launcher, air slam",
+  "events": [
+    {
+      "t": 0.0,
+      "do": "move",
+      "by": [
+        36,
+        0
+      ],
+      "time": 0.07
+    },
+    {
+      "t": 0.0,
+      "do": "slash",
+      "radius": 210,
+      "squash": 0.18,
+      "from": -70,
+      "to": 70,
+      "width": 96
+    },
+    {
+      "t": 0.04,
+      "do": "hit",
+      "push": 140,
+      "stop": 0.06,
+      "shake": 3,
+      "spark": 50
+    },
+    {
+      "t": 0.42,
+      "do": "slash",
+      "radius": 130,
+      "squash": 0.75,
+      "tilt": 24,
+      "from": 105,
+      "to": -45,
+      "width": 40
+    },
+    {
+      "t": 0.46,
+      "do": "hit",
+      "push": 45,
+      "stop": 0.04,
+      "shake": 2,
+      "spark": 42
+    },
+    {
+      "t": 0.58,
+      "do": "slash",
+      "radius": 130,
+      "squash": 0.75,
+      "tilt": -24,
+      "from": -105,
+      "to": 45,
+      "width": 40
+    },
+    {
+      "t": 0.62,
+      "do": "hit",
+      "push": 45,
+      "stop": 0.04,
+      "shake": 2,
+      "spark": 42
+    },
+    {
+      "t": 0.78,
+      "do": "move",
+      "by": [
+        24,
+        0
+      ],
+      "time": 0.06
+    },
+    {
+      "t": 0.78,
+      "do": "slash",
+      "radius": 165,
+      "from": 95,
+      "to": -115,
+      "width": 62,
+      "palette": "gold"
+    },
+    {
+      "t": 0.82,
+      "do": "hit",
+      "push": 30,
+      "launch": -640,
+      "stop": 0.08,
+      "shake": 4,
+      "spark": 62,
+      "palette": "gold"
+    },
+    {
+      "t": 1.02,
+      "do": "move",
+      "by": [
+        40,
+        -150
+      ],
+      "time": 0.12
+    },
+    {
+      "t": 1.2,
+      "do": "slash",
+      "radius": 180,
+      "squash": 0.9,
+      "tilt": 10,
+      "from": -125,
+      "to": 85,
+      "width": 76,
+      "palette": "red"
+    },
+    {
+      "t": 1.25,
+      "do": "hit",
+      "push": 260,
+      "launch": 950,
+      "stop": 0.14,
+      "shake": 9,
+      "spark": 120,
+      "palette": "red",
+      "finisher": true
+    },
+    {
+      "t": 1.4,
+      "do": "move",
+      "by": [
+        -20,
+        150
+      ],
+      "time": 0.14
+    }
+  ]
+}

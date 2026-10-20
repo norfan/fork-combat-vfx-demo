@@ -1,0 +1,5 @@
+.godot/
+.local-data/
+verification/
+__pycache__/
+*.pyc

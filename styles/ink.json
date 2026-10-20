@@ -1,0 +1,38 @@
+{
+  "title": "Combo VFX demo",
+  "language": "en",
+  "thickness": 1.0,
+  "pixel": 3,
+  "description": "Monochrome ink strokes on paper, red for the big hit.",
+  "palettes": {
+    "normal": [
+      "2a2a2a",
+      "4a4a4a",
+      "8a8a8a",
+      "d8d4c8"
+    ],
+    "violet": [
+      "1a1a1a",
+      "3a3a3a",
+      "6a6a6a",
+      "c8c2b4"
+    ],
+    "gold": [
+      "fffbe2",
+      "e8c35a",
+      "b07d1e",
+      "5a3d0a"
+    ]
+  },
+  "colors": {
+    "background": "ece5d3",
+    "ground": "6a6458",
+    "outline": "1a1714",
+    "blade": "1a1714",
+    "marker_core": "4a4a4a",
+    "dummy": "a89a80",
+    "dummy_band": "6a5a44",
+    "flash": "ffffff",
+    "text": "1a1714"
+  }
+}

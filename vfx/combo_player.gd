@@ -1,0 +1,143 @@
+@tool
+class_name ComboPlayer
+extends Node2D
+## Root of a combo scene: plays `combo_file` (an event timeline, references/combo_events.md)
+## in the look of `style_file`, on loop. In the editor it shows the stage at rest.
+##
+## Run flags (after `--`): --verify (headless self-test), --capture=FILE [--capture-at=S]
+## (one screenshot, then quit), --frames=DIR [--duration=S] (every frame, then quit).
+
+@export_file("*.json") var combo_file := "":
+	set(value):
+		combo_file = value
+		_rebuild()
+@export_file("*.json") var style_file := "":
+	set(value):
+		style_file = value
+		_rebuild()
+## Start playing as soon as the scene runs.
+@export var autoplay := true
+## Seconds of rest before the combo plays again; negative plays it once.
+@export var loop_pause := 1.0
+
+const GALLERY := "res://main.tscn"
+
+var demo: ComboStage
+var shake_left := 0.0
+var shake_duration := 0.0
+var shake_strength := 0.0
+var capture_path := ""
+var capture_at := 0.5
+var frames_dir := ""
+var frames_duration := 4.0
+var _frame_index := 0
+var elapsed := 0.0
+var capturing := false
+var verify := false
+var verify_age := 0.0
+var _rest := -1.0
+var _overlay: CanvasLayer
+
+func _ready() -> void:
+	for arg in OS.get_cmdline_user_args():
+		if arg.begins_with("--capture="): capture_path = arg.trim_prefix("--capture=")
+		elif arg.begins_with("--capture-at="): capture_at = float(arg.trim_prefix("--capture-at="))
+		elif arg == "--verify": verify = true
+		elif arg.begins_with("--frames="): frames_dir = arg.trim_prefix("--frames=")
+		elif arg.begins_with("--duration="): frames_duration = float(arg.trim_prefix("--duration="))
+	_rebuild()
+	if Engine.is_editor_hint(): return
+	DisplayServer.window_set_title(ComboStyle.title)
+	if not frames_dir.is_empty(): DirAccess.make_dir_recursive_absolute(frames_dir)
+	var recording := verify or not capture_path.is_empty() or not frames_dir.is_empty()
+	if recording: loop_pause = -1.0
+	if autoplay or recording: demo.play()
+
+func _notification(what: int) -> void:
+	# Several combo scenes can be open in the editor and the style is static: reload ours
+	# whenever this scene's tab comes back.
+	if what == NOTIFICATION_ENTER_TREE and Engine.is_editor_hint() and demo != null: _rebuild()
+
+## Builds the stage for the current files (again, when they change in the inspector).
+func _rebuild() -> void:
+	if not is_inside_tree(): return
+	ComboStyle.load_file(style_file)
+	for node: Node in [demo, _overlay]:
+		if node != null: node.free()
+	_overlay = CanvasLayer.new()
+	_overlay.layer = 50
+	add_child(_overlay)
+	var hint := Label.new()
+	hint.text = ComboStyle.title
+	hint.position = Vector2(24, 675)
+	hint.add_theme_font_size_override("font_size", 20)
+	hint.add_theme_color_override("font_color", ComboStyle.c("text"))
+	_overlay.add_child(hint)
+	demo = ComboStage.new()
+	demo.combo_file = combo_file
+	add_child(demo)
+
+func request_screen_shake(duration: float, strength: float) -> void:
+	shake_left = duration
+	shake_duration = duration
+	shake_strength = strength
+
+func _unhandled_input(event: InputEvent) -> void:
+	if Engine.is_editor_hint(): return
+	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE \
+			and ResourceLoader.exists(GALLERY) and get_tree().current_scene == self \
+			and scene_file_path != GALLERY:
+		get_tree().change_scene_to_file(GALLERY)
+
+func _process(delta: float) -> void:
+	if Engine.is_editor_hint(): return
+	shake_left = maxf(0.0, shake_left - delta)
+	var camera := get_viewport().get_camera_2d()
+	if camera != null:
+		var amount := shake_strength * shake_left / maxf(shake_duration, 0.001)
+		camera.offset = Vector2(sin(elapsed * 137.0), cos(elapsed * 173.0)) * amount
+	elapsed += delta
+	_loop(delta)
+	if not frames_dir.is_empty():
+		_save_frame()
+	if not capture_path.is_empty() and elapsed >= capture_at and not capturing:
+		capturing = true
+		_capture()
+	if verify:
+		verify_age += delta
+		if verify_age > 30.0:
+			push_error("Combo did not settle")
+			get_tree().quit(1)
+		elif demo.is_settled():
+			var expected: int = demo.expected_hits()
+			if demo.hits != expected or expected == 0:
+				push_error("Expected %d hits, landed %d" % [expected, demo.hits])
+				get_tree().quit(1)
+			else:
+				print("PASS: %d hits landed" % demo.hits)
+				get_tree().quit()
+			verify = false
+
+## Plays the combo again after a rest once it has settled.
+func _loop(delta: float) -> void:
+	if loop_pause < 0.0 or demo.playing or not demo.is_settled() or demo.hits == 0:
+		_rest = -1.0
+		return
+	if _rest < 0.0: _rest = loop_pause
+	_rest -= delta
+	if _rest <= 0.0:
+		_rest = -1.0
+		demo.play()
+
+func _save_frame() -> void:
+	var index := _frame_index
+	_frame_index += 1
+	await RenderingServer.frame_post_draw
+	get_viewport().get_texture().get_image().save_png(frames_dir.path_join("frame_%04d.png" % index))
+	if elapsed >= frames_duration: get_tree().quit()
+
+func _capture() -> void:
+	await RenderingServer.frame_post_draw
+	var error := get_viewport().get_texture().get_image().save_png(capture_path)
+	if error != OK: push_error("Capture failed: %s" % error)
+	get_tree().quit(0 if error == OK else 1)

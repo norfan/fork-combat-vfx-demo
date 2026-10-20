@@ -1,0 +1,27 @@
+{
+  "title": "Combo VFX demo",
+  "language": "en",
+  "thickness": 1.0,
+  "pixel": 3,
+  "description": "Fire-orange blades and red-hot sparks.",
+  "palettes": {
+    "normal": [
+      "fff4d6",
+      "ffc061",
+      "f0642e",
+      "6a1a12"
+    ],
+    "violet": [
+      "ffe9d6",
+      "ff9a5c",
+      "c2361f",
+      "4a0f0b"
+    ]
+  },
+  "colors": {
+    "background": "241712",
+    "ground": "9a7a64",
+    "blade": "fff4d6",
+    "marker_core": "ffc061"
+  }
+}

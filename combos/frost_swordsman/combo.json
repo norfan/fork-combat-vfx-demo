@@ -1,0 +1,324 @@
+{
+  "name": "冰霜剑士: 4 thrusts, double whirlwind, launcher, 3 air cuts, slam",
+  "events": [
+    {
+      "t": 0.0,
+      "do": "move",
+      "by": [
+        14,
+        0
+      ],
+      "time": 0.05
+    },
+    {
+      "t": 0.0,
+      "do": "slash",
+      "radius": 205,
+      "squash": 0.17,
+      "tilt": -5,
+      "from": -70,
+      "to": 70,
+      "width": 90
+    },
+    {
+      "t": 0.03,
+      "do": "hit",
+      "push": 40,
+      "stop": 0.03,
+      "shake": 1.6,
+      "spark": 38
+    },
+    {
+      "t": 0.1,
+      "do": "move",
+      "by": [
+        12,
+        0
+      ],
+      "time": 0.05
+    },
+    {
+      "t": 0.1,
+      "do": "slash",
+      "radius": 215,
+      "squash": 0.15,
+      "tilt": 6,
+      "from": 70,
+      "to": -70,
+      "width": 84
+    },
+    {
+      "t": 0.13,
+      "do": "hit",
+      "push": 40,
+      "stop": 0.03,
+      "shake": 1.8,
+      "spark": 40
+    },
+    {
+      "t": 0.19,
+      "do": "move",
+      "by": [
+        12,
+        0
+      ],
+      "time": 0.05
+    },
+    {
+      "t": 0.19,
+      "do": "slash",
+      "radius": 210,
+      "squash": 0.19,
+      "tilt": -2,
+      "from": -70,
+      "to": 70,
+      "width": 96
+    },
+    {
+      "t": 0.22,
+      "do": "hit",
+      "push": 40,
+      "stop": 0.035,
+      "shake": 2.0,
+      "spark": 42
+    },
+    {
+      "t": 0.29,
+      "do": "move",
+      "by": [
+        14,
+        0
+      ],
+      "time": 0.05
+    },
+    {
+      "t": 0.29,
+      "do": "slash",
+      "radius": 230,
+      "squash": 0.16,
+      "tilt": 3,
+      "from": 70,
+      "to": -70,
+      "width": 110
+    },
+    {
+      "t": 0.32,
+      "do": "hit",
+      "push": 45,
+      "stop": 0.04,
+      "shake": 2.4,
+      "spark": 46
+    },
+    {
+      "t": 0.7,
+      "do": "slash",
+      "radius": 175,
+      "squash": 0.45,
+      "tilt": 4,
+      "from": -90,
+      "to": 90,
+      "width": 46
+    },
+    {
+      "t": 0.73,
+      "do": "hit",
+      "push": 60,
+      "stop": 0.07,
+      "shake": 3.8,
+      "spark": 56
+    },
+    {
+      "t": 0.78,
+      "do": "slash",
+      "radius": 160,
+      "squash": 0.4,
+      "tilt": -4,
+      "from": 90,
+      "to": 270,
+      "width": 40
+    },
+    {
+      "t": 0.86,
+      "do": "slash",
+      "radius": 185,
+      "squash": 0.5,
+      "tilt": 6,
+      "from": -90,
+      "to": 90,
+      "width": 52
+    },
+    {
+      "t": 0.89,
+      "do": "hit",
+      "push": 60,
+      "stop": 0.08,
+      "shake": 4.5,
+      "spark": 62
+    },
+    {
+      "t": 0.94,
+      "do": "slash",
+      "radius": 165,
+      "squash": 0.45,
+      "tilt": -6,
+      "from": 90,
+      "to": 270,
+      "width": 44
+    },
+    {
+      "t": 1.15,
+      "do": "move",
+      "by": [
+        20,
+        0
+      ],
+      "time": 0.06
+    },
+    {
+      "t": 1.15,
+      "do": "slash",
+      "radius": 170,
+      "squash": 1.0,
+      "from": 95,
+      "to": -115,
+      "width": 58,
+      "palette": "gold"
+    },
+    {
+      "t": 1.19,
+      "do": "hit",
+      "push": 30,
+      "launch": -640,
+      "stop": 0.06,
+      "shake": 3.2,
+      "spark": 52,
+      "palette": "gold"
+    },
+    {
+      "t": 1.26,
+      "do": "move",
+      "by": [
+        30,
+        -130
+      ],
+      "time": 0.12
+    },
+    {
+      "t": 1.4,
+      "do": "slash",
+      "radius": 160,
+      "squash": 0.9,
+      "tilt": 8,
+      "from": -110,
+      "to": 60,
+      "width": 38
+    },
+    {
+      "t": 1.43,
+      "do": "hit",
+      "push": 30,
+      "stop": 0.04,
+      "shake": 1.8,
+      "spark": 40
+    },
+    {
+      "t": 1.5,
+      "do": "slash",
+      "radius": 160,
+      "squash": 0.7,
+      "tilt": -22,
+      "from": 100,
+      "to": -80,
+      "width": 40
+    },
+    {
+      "t": 1.53,
+      "do": "hit",
+      "push": 30,
+      "stop": 0.04,
+      "shake": 2.0,
+      "spark": 42
+    },
+    {
+      "t": 1.5,
+      "do": "move",
+      "by": [
+        10,
+        0
+      ],
+      "time": 0.06
+    },
+    {
+      "t": 1.61,
+      "do": "slash",
+      "radius": 165,
+      "squash": 0.5,
+      "tilt": 12,
+      "from": -80,
+      "to": 75,
+      "width": 44
+    },
+    {
+      "t": 1.64,
+      "do": "hit",
+      "push": 30,
+      "launch": -250,
+      "stop": 0.045,
+      "shake": 2.4,
+      "spark": 46
+    },
+    {
+      "t": 1.72,
+      "do": "charge"
+    },
+    {
+      "t": 1.84,
+      "do": "move",
+      "by": [
+        0,
+        -20
+      ],
+      "time": 0.12
+    },
+    {
+      "t": 2.02,
+      "do": "move",
+      "by": [
+        20,
+        10
+      ],
+      "time": 0.06
+    },
+    {
+      "t": 2.02,
+      "do": "slash",
+      "radius": 190,
+      "squash": 1.0,
+      "tilt": 8,
+      "from": -125,
+      "to": 85,
+      "width": 76,
+      "palette": "gold"
+    },
+    {
+      "t": 2.07,
+      "do": "hit",
+      "push": 220,
+      "launch": 950,
+      "stop": 0.15,
+      "shake": 9.5,
+      "spark": 125,
+      "palette": "gold",
+      "finisher": true
+    },
+    {
+      "t": 2.22,
+      "do": "move",
+      "by": [
+        -20,
+        140
+      ],
+      "time": 0.14
+    }
+  ]
+}

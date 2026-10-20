@@ -1,0 +1,51 @@
+{
+  "title": "Combo VFX demo",
+  "language": "en",
+  "thickness": 1.0,
+  "pixel": 3,
+  "description": "Blue-white steel on a slate night. Every value here is the built-in default.",
+  "palettes": {
+    "normal": [
+      "ffffff",
+      "d6f3ff",
+      "78c4ea",
+      "33618f"
+    ],
+    "violet": [
+      "fff4ff",
+      "f3b6ff",
+      "c25fe6",
+      "4f1c72"
+    ],
+    "red": [
+      "fff0dd",
+      "ff9c66",
+      "e2412f",
+      "6e1222"
+    ],
+    "gold": [
+      "fffbe2",
+      "ffe189",
+      "e4ab35",
+      "80530f"
+    ],
+    "green": [
+      "f4ffe6",
+      "b9f27c",
+      "4fbf4a",
+      "1d5a2c"
+    ]
+  },
+  "colors": {
+    "background": "20262d",
+    "ground": "8a949e",
+    "outline": "14181d",
+    "flash": "fff6ea",
+    "dummy": "b8794c",
+    "dummy_band": "6e3f26",
+    "blade": "e8f6ff",
+    "marker_core": "78c4ea",
+    "text_gold": "ffe189",
+    "text": "e8eef4"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "title": "冰霜剑士 · 十一连斩",
+  "language": "zh",
+  "thickness": 0.6,
+  "pixel": 5,
+  "description": "Ice-blue and white blades on a cold night; white-hot frost burst for launcher and finisher.",
+  "palettes": {
+    "normal": [
+      "ffffff",
+      "e4f8ff",
+      "7fd0f2",
+      "1f5e8c"
+    ],
+    "gold": [
+      "ffffff",
+      "ffffff",
+      "c8f0ff",
+      "3a86c4"
+    ]
+  },
+  "colors": {
+    "background": "141c26",
+    "ground": "7e97ab",
+    "blade": "e4f8ff",
+    "marker_core": "9fe2ff",
+    "flash": "ffffff",
+    "text_gold": "c8f0ff"
+  }
+}

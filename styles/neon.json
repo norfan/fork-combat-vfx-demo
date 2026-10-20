@@ -1,0 +1,33 @@
+{
+  "title": "Combo VFX demo",
+  "language": "en",
+  "thickness": 1.0,
+  "pixel": 3,
+  "description": "Cyan and magenta light blades on a dark city night.",
+  "palettes": {
+    "normal": [
+      "ffffff",
+      "9ffcff",
+      "22c7ff",
+      "1b2a8a"
+    ],
+    "violet": [
+      "fff0ff",
+      "ff9cf6",
+      "e03ad8",
+      "4c0f6e"
+    ],
+    "gold": [
+      "ffffe8",
+      "fff27a",
+      "ffc21f",
+      "7a4a00"
+    ]
+  },
+  "colors": {
+    "background": "0d0f1f",
+    "ground": "4b5fa8",
+    "marker_core": "22c7ff",
+    "blade": "9ffcff"
+  }
+}
