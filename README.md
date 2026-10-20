@@ -3,7 +3,7 @@
 [中文说明](README.zh-CN.md)
 
 Describe a sword combo in plain words — moves, rhythm, colours, width — and get a Godot 4
-scene with fighting-game hit feel: crescent pixel slash smears, star hit sparks, hit-stop,
+scene with fighting-game hit feel: pixel crescents or sampled blade ribbons, star hit sparks, hit-stop,
 knockback, launch and slam, screen shake, a hit counter and a finisher. Packaged as an AI
 agent skill; the repository itself is a Godot project you can open and play. No art,
 plugins or autoloads — every effect is drawn in code.
@@ -18,7 +18,8 @@ play it on loop. Keys: 1/Space replay, 2 slow motion, R reset, Esc back to the g
 project.godot   main.tscn (gallery)
 vfx/            the effect code: combo_player.gd (scene root), combo_stage.gd (the combo and
                 the stock pixel renderer), pixel_slash.gd (pixel smears), combo_style.gd
-                (colours), gallery.gd; ink_stage.gd + ink_stroke.gd (the ink renderer)
+                (colours), gallery.gd; ink_stage.gd + ink_stroke.gd (the ink renderer);
+                ribbon_stage.gd + trajectory_ribbon.gd + trajectory_ribbon.gdshader (blade ribbons)
 combos/<name>/  <name>.tscn, combo.json (the events), style.json (the look), prompt.md
 styles/         style presets: default, ember, neon, ink
 tools/          new_combo.py, verify_combo.py, frames_to_gif.py, frames_to_review.py,
@@ -43,10 +44,51 @@ following [references/choreography.md](references/choreography.md), adds it as a
 (to your Godot project, or to a fresh demo project), runs the self-test and checks a frame
 sheet of the result.
 
+## Choosing crescents or blade ribbons
+
+Both renderers can draw slashes. **Choose ribbons to show how the weapon moves;
+choose crescents for a complete crescent silhouette, a sword-energy shape or an
+exaggerated broad cut.** Ribbons also work for finishers, as Rift Dancer demonstrates;
+the move's name alone does not decide the renderer.
+
+| Drawing method | Best suited to | `style.json` setting |
+|---|---|---|
+| Crescent | Broad cuts, sword-energy shapes, attacks with a strong complete silhouette | Omit `renderer`, or set it to `""` |
+| Blade ribbon | Weapon-following swings, consecutive clashes, spins, natural trailing and recovery | `"renderer": "ribbon"` |
+
+Specify your choice in the skill prompt, for example:
+
+> Use blade ribbons: two slow cuts, three fast cuts, a spinning launcher and a heavy slam.
+> Blue and violet, with a gold finisher.
+
+> Use the original crescent renderer for broad cuts with clear crescent sword-energy shapes.
+
+The renderer is currently selected **for the entire demo**. There is no automatic
+per-strike selection; omitting `renderer` still uses crescents. Mixing ribbon swings
+and a crescent sword-energy finish through per-strike settings is not implemented.
+`ribbon` replaces `slash` events; hit sparks, charge effects and straight cut marks
+retain their existing implementations. Selecting a renderer changes the drawing
+method; it does not add flying sword-energy gameplay.
+
+Ribbon timing must be authored too: `slash.duration` is the swing time, `tail` is the
+retained sample lifetime, and its `hit.t` should be `slash.t + duration / 2`.
+Do not change only the renderer name while keeping the old contact timing. See the
+[Rift Dancer example](combos/rift_dancer/README.md) and the
+[event fields](references/combo_events.md#sampled-trajectory-renderer).
+
 ## Examples: prompt → result
 
 Each folder in [combos/](combos) holds the prompt (`prompt.md`), the `combo.json` and
 `style.json` an agent wrote for it, and the scene.
+
+### Rift dancer — [combos/rift_dancer](combos/rift_dancer)
+
+Nine strikes with sampled blade ribbons: two deliberate opposing cuts, three fast
+blue/violet cuts, a gold spinning launcher, two aerial cuts, and a charged gold slam.
+The existing combat feedback and event player drive the new `"renderer": "ribbon"`.
+Old trajectory samples narrow, darken and disappear; UVs supply the colour bands.
+
+![Rift dancer](media/rift_dancer.gif)
 
 ### Ember launcher — [combos/ember_launcher](combos/ember_launcher)
 
@@ -78,29 +120,66 @@ strokes, dry-brush gaps, ink drops and splashes instead of crescents and stars. 
 
 ## Prompt guide: which words give which effect
 
-Write moves in order, then rhythm, colours, width. Each phrase maps to a group of effects:
+Describe **drawing method → move order → rhythm → hit feedback → appearance**.
+These are authoring guidelines for the agent: it writes your description into a
+timeline and style file. The project does not parse prompt keywords itself.
 
-| Say | You get |
+### Choose how the blade is drawn
+
+| Say | What it looks like | Selection |
+|---|---|---|
+| "Blade ribbons", "leave a trail behind the swinging blade" | A sampled band grows behind the blade; old sections narrow, darken and disappear | `renderer: ribbon`; suited to swings, clashes and spins |
+| "Original crescents", "a complete large crescent silhouette" | An authored crescent opens quickly, then erodes from its old end | Default renderer; suited to broad cuts with a strong silhouette |
+| "Ink brush strokes, dry-brush gaps and ink drops" | A separate brush renderer with pressure, fibres and droplets | `renderer: ink`; see Ink Forms |
+
+The renderer applies to the entire demo. A move name such as "horizontal slash"
+or "launcher" does not switch it automatically. Unspecified means the default
+crescent renderer. The `ink` colour preset alone does not enable the brush renderer.
+
+### Describe the move and the target's reaction
+
+| Say | Move and reaction |
 |---|---|
-| horizontal slash / sweep · 横斩 | a flat crescent across the target, small knockback |
-| vertical chop / overhead · 竖劈 | a round crescent from high to low |
-| diagonal · 斜斩; "an X" | a tilted crescent; two with opposite tilts cross |
-| thrust / stab · 突刺 | a long flat spear-shaped smear and a forward lunge |
-| spin / whirlwind · 旋转, 旋风斩 ("two turns") | half-turn crescents chained around the attacker, a hit on each front half |
-| rising slash / launcher · 上挑 | an upward crescent; the target is thrown into the air |
-| aerial combo · 空中连斩 / 乱斩 | the attacker jumps after the target; quick small hits keep it airborne |
-| slam / heavy chop to the ground · 砸地, 重劈 | the target is driven down and bounces, ground ring |
-| dash slash · 冲刺斩 | a big lunge with a flat sweep |
-| iaido / one flash · 居合, 一闪 | a gold glint, the attacker flashes past the target, cuts appear on it, then a burst |
-| ultimate / finisher / 终结 / 必杀 / last "heavy" move | the biggest spark, ring, long hit-stop, strong shake, gold counter |
-| rhythm: slow · 慢 / normal · 中 / fast · 快 / blinding · 极快 | long / medium / short gaps; longer or shorter hit-stop per hit |
-| colours: two named colours (黑红, ice blue and white …) | the first for regular cuts, the second as the accent on launcher and finisher; background adjusted for contrast |
-| a preset name: ember, neon, ink | that preset's palettes and scene colours |
-| thin · 细 / medium · 中等 / bold · 粗 | blade thickness ×0.6 / ×1.0 / ×1.4 |
-| finer · 细腻 / chunky · 颗粒粗 / retro | pixel size 2 / 4–5 / 6 (default 3) |
+| "One horizontal sweep" | A horizontally spread cut; specify small knockback if wanted |
+| "Chop down from overhead" | A high-to-low swing; this alone does not launch or slam the target |
+| "Two diagonal cuts forming an X" | Opposite diagonal swings with separate contacts |
+| "Three quick thrusts, each stepping forward slightly" | Three narrow stabs sharing a small lunge budget; existing thrust examples use the default renderer's flattened blade |
+| "Spin twice, one hit per turn" | Two rotations and two contacts; name rotation count and hit count separately |
+| "Swing upward and launch the target" | An upward cut plus upward target velocity; swing direction and target reaction are separate choices |
+| "Jump after the target and cut three times in the air" | Attacker pursuit and three light hits that sustain the juggle; vary each swing's direction |
+| "An aerial heavy chop slamming the target down" | A downward cut with downward target velocity, landing and bounce; add "as the finisher" for finishing rings |
+| "Dash forward, then sweep" | A forward move followed by a sweep attached to the attacker |
+| "Charge an iaido flash, pass through, then three delayed cut marks" | Charge, instant repositioning, three delayed marks and authored contacts; marks retain the existing straight-cut effect |
 
-Not named means default: a varied 3–4 cut combo ending in a launcher and finisher, steel
-blue, medium width, pixel 3, text in the language you wrote in.
+The same move can use different blade renderers. The current attacker is a diamond
+marker and the target a block: these requests compose movement, effects and hit
+reactions, rather than generating character swing animations.
+
+### Set rhythm, impact and appearance
+
+| Say | What changes |
+|---|---|
+| "Slow, slow, fast-fast-fast, pause, then heavy" | Two spaced swings, a tight three-cut string and a final wind-up; hit-stop adds to the gaps |
+| "Finish this swing sooner", "keep the trail longer" | Swing and recovery timing; ribbons use `duration` for the swing and `tail` for sample lifetime |
+| "Light hit, small knockback, subtle shake" | Small hit spark, short hit-stop, light knockback and shake |
+| "A gold finisher with heavy hit-stop" | Larger hit spark and rings, longer hit-stop, stronger shake; the completed combo counter uses the accent colour |
+| "Ice-blue regular cuts, gold finish" | Assign regular and accent palettes, adjusting background contrast; two unspecified colour roles usually follow this pattern |
+| "ember colours", "neon colours", "ink colours" | That preset's palettes and scene colours; choose the drawing method separately |
+| "Thin / medium / bold blades" | Width multiplier about ×0.6 / ×1.0 / ×1.4 |
+| "Fine / chunky / retro pixels" | 2 / 4–5 / 6 world pixels per texture pixel; default 3 |
+
+A complete prompt:
+
+> Use blade ribbons. Sweep, reverse diagonal, then three quick alternating cuts.
+> Pause, spin into a launcher, jump after the target for two aerial cuts, and finish
+> with a heavy slam. Slow opening, fast middle, a pause before the finish.
+> Alternate blue and violet, gold finish, medium width, pixel 3.
+> Subtle shake on light hits, heavy hit-stop on the finisher.
+
+The agent fills unspecified details from the SKILL defaults: a varied 3–4 cut combo
+ending in a launcher and finisher, steel blue, medium width, pixel 3, and text in
+your prompt's language. Refine a specific beat afterwards: "delay the second cut"
+or "make the final blade wider".
 
 ## By hand
 

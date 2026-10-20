@@ -1,0 +1,40 @@
+{
+  "title": "断空九式 · 轨迹刀光",
+  "language": "zh",
+  "renderer": "ribbon",
+  "thickness": 1.0,
+  "pixel": 3,
+  "description": "Cyan and violet blade trajectories, with a gold rising spiral and heavy gold slam.",
+  "palettes": {
+    "normal": [
+      "f5ffff",
+      "a6efff",
+      "42b7e1",
+      "244b7d"
+    ],
+    "violet": [
+      "fff5ff",
+      "e1b8ff",
+      "a477e9",
+      "463878"
+    ],
+    "gold": [
+      "ffffed",
+      "ffe9a8",
+      "edb953",
+      "825d36"
+    ]
+  },
+  "colors": {
+    "background": "111b29",
+    "ground": "40546a",
+    "outline": "09121e",
+    "dummy": "52788a",
+    "dummy_band": "294858",
+    "flash": "efffff",
+    "blade": "a6efff",
+    "marker_core": "42b7e1",
+    "text": "d8e7ee",
+    "text_gold": "ffe9a8"
+  }
+}

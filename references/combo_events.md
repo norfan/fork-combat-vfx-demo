@@ -54,6 +54,22 @@ straight up, +90° straight down. `from` → `to` is the direction of the swing:
 The crescent grows in 0.045 s, holds 0.04 s and fades over 0.13 s. It is attached to the
 attacker, so a `move` at the same `t` drags it along (that is what gives a lunge its weight).
 
+#### Sampled trajectory renderer
+
+Set `"renderer": "ribbon"` in `style.json` to use `ribbon_stage.gd` with the same
+event player. `slash` accepts `duration` (swing seconds, default 0.16) and `tail`
+(retained sample lifetime, default 0.18), plus the normal angle, squash, tilt, width
+and palette fields. Its reach is fitted to the target's predicted contact position;
+`radius` is not used by this renderer. The midpoint of `from` and `to` crosses the
+target at half `duration`, so pair each slash with a `hit` at `slash.t + duration / 2`
+rather than the stock crescent's fixed 0.03–0.05 s delay. Put simultaneous `move`
+events before the slash so targeting can account for the movement.
+
+This renderer grows a triangle band from blade samples, shades UV breadth and
+birth time, and thins/deletes old samples. It shares the stage action clock and
+checks the visible ribbon covers every hit point. `combos/rift_dancer/` is the
+complete nine-hit example; `combos/trajectory_slash/` is the single-cut study.
+
 ### `move` — the attacker glides
 | Field | Meaning | Default |
 |---|---|---|

@@ -1,5 +1,6 @@
 .godot/
 .local-data/
+.workbuddy/
 verification/
 __pycache__/
 *.pyc

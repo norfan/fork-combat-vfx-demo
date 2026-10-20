@@ -1,0 +1,243 @@
+{
+  "name": "断空九式",
+  "events": [
+    {
+      "t": 0.06,
+      "do": "charge"
+    },
+    {
+      "t": 0.45,
+      "do": "move",
+      "by": [
+        18,
+        0
+      ],
+      "time": 0.12
+    },
+    {
+      "t": 0.45,
+      "do": "slash",
+      "radius": 180,
+      "from": -105,
+      "to": 105,
+      "width": 64,
+      "squash": 0.85,
+      "tilt": -24,
+      "palette": "normal",
+      "duration": 0.2,
+      "tail": 0.18
+    },
+    {
+      "t": 0.55,
+      "do": "hit",
+      "push": 140,
+      "stop": 0.085,
+      "shake": 4,
+      "spark": 60,
+      "palette": "normal"
+    },
+    {
+      "t": 0.9,
+      "do": "slash",
+      "radius": 180,
+      "from": 110,
+      "to": -110,
+      "width": 70,
+      "squash": 0.7,
+      "tilt": 26,
+      "palette": "violet",
+      "duration": 0.18,
+      "tail": 0.18
+    },
+    {
+      "t": 0.99,
+      "do": "hit",
+      "push": 120,
+      "stop": 0.075,
+      "shake": 4.5,
+      "spark": 65,
+      "palette": "violet"
+    },
+    {
+      "t": 1.3,
+      "do": "slash",
+      "radius": 180,
+      "from": -95,
+      "to": 95,
+      "width": 44,
+      "squash": 0.55,
+      "tilt": -30,
+      "palette": "normal",
+      "duration": 0.12,
+      "tail": 0.14
+    },
+    {
+      "t": 1.36,
+      "do": "hit",
+      "push": 45,
+      "stop": 0.035,
+      "shake": 2,
+      "spark": 40,
+      "palette": "normal"
+    },
+    {
+      "t": 1.48,
+      "do": "slash",
+      "radius": 180,
+      "from": 100,
+      "to": -100,
+      "width": 48,
+      "squash": 0.72,
+      "tilt": 30,
+      "palette": "violet",
+      "duration": 0.1,
+      "tail": 0.14
+    },
+    {
+      "t": 1.53,
+      "do": "hit",
+      "push": 45,
+      "stop": 0.035,
+      "shake": 2.5,
+      "spark": 44,
+      "palette": "violet"
+    },
+    {
+      "t": 1.64,
+      "do": "slash",
+      "radius": 180,
+      "from": -120,
+      "to": 120,
+      "width": 56,
+      "squash": 0.48,
+      "tilt": -12,
+      "palette": "normal",
+      "duration": 0.12,
+      "tail": 0.16
+    },
+    {
+      "t": 1.7,
+      "do": "hit",
+      "push": 70,
+      "stop": 0.045,
+      "shake": 3,
+      "spark": 50,
+      "palette": "normal"
+    },
+    {
+      "t": 1.96,
+      "do": "slash",
+      "radius": 180,
+      "from": 200,
+      "to": -160,
+      "width": 76,
+      "squash": 0.8,
+      "tilt": -12,
+      "palette": "gold",
+      "duration": 0.28,
+      "tail": 0.2
+    },
+    {
+      "t": 2.1,
+      "do": "hit",
+      "push": 30,
+      "stop": 0.085,
+      "shake": 5,
+      "spark": 76,
+      "palette": "gold",
+      "launch": -640
+    },
+    {
+      "t": 2.23,
+      "do": "move",
+      "by": [
+        25,
+        -105
+      ],
+      "time": 0.18
+    },
+    {
+      "t": 2.43,
+      "do": "slash",
+      "radius": 180,
+      "from": -110,
+      "to": 110,
+      "width": 56,
+      "squash": 0.65,
+      "tilt": -25,
+      "palette": "normal",
+      "duration": 0.14,
+      "tail": 0.18
+    },
+    {
+      "t": 2.5,
+      "do": "hit",
+      "push": 15,
+      "stop": 0.04,
+      "shake": 3,
+      "spark": 52,
+      "palette": "normal",
+      "launch": -260
+    },
+    {
+      "t": 2.68,
+      "do": "slash",
+      "radius": 180,
+      "from": 110,
+      "to": -110,
+      "width": 62,
+      "squash": 0.85,
+      "tilt": 22,
+      "palette": "violet",
+      "duration": 0.12,
+      "tail": 0.18
+    },
+    {
+      "t": 2.74,
+      "do": "hit",
+      "push": 10,
+      "stop": 0.05,
+      "shake": 3.5,
+      "spark": 58,
+      "palette": "violet",
+      "launch": -450
+    },
+    {
+      "t": 2.91,
+      "do": "charge"
+    },
+    {
+      "t": 3.18,
+      "do": "move",
+      "by": [
+        15,
+        105
+      ],
+      "time": 0.2
+    },
+    {
+      "t": 3.18,
+      "do": "slash",
+      "radius": 180,
+      "from": -115,
+      "to": 115,
+      "width": 110,
+      "squash": 0.95,
+      "tilt": -15,
+      "palette": "gold",
+      "duration": 0.22,
+      "tail": 0.24
+    },
+    {
+      "t": 3.29,
+      "do": "hit",
+      "push": 220,
+      "stop": 0.15,
+      "shake": 9,
+      "spark": 115,
+      "palette": "gold",
+      "launch": 1050,
+      "finisher": true
+    }
+  ]
+}
