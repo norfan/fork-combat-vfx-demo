@@ -303,4 +303,10 @@ section.
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+[PolyForm Noncommercial 1.0.0](LICENSE): free for personal, study, research and other
+noncommercial use; commercial use needs separate permission from the author — ask via
+[GitHub](https://github.com/yuewen-huang). It covers the whole repository: code,
+documentation, combos and media.
+
+Versions up to and including commit `efbcb0e` were published under the MIT license; copies
+of those versions remain available under MIT.

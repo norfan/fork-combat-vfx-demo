@@ -362,4 +362,8 @@ verify_combo.py 加 `--media` 会把 GIF 和拼图复制到 `media/`。事件格
 
 ## 许可
 
-MIT，见 [LICENSE](LICENSE)。
+[PolyForm Noncommercial 1.0.0](LICENSE)：个人、学习、研究等非商业用途可以免费使用；
+商业用途需要另外取得作者授权，请通过 [GitHub](https://github.com/yuewen-huang) 联系。
+适用于整个仓库：代码、文档、连招和素材。
+
+提交 `efbcb0e` 及更早的版本以 MIT 许可发布，这些版本的副本仍可按 MIT 使用。
