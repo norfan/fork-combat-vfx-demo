@@ -1,0 +1,19 @@
+{
+  "title": "沙 · 魔法绘制器",
+  "language": "zh",
+  "renderer": "magic",
+  "thickness": 1.0,
+  "pixel": 3,
+  "colors": {
+    "background": "14120f",
+    "ground": "5a4c36",
+    "outline": "060503",
+    "dummy": "56636e",
+    "dummy_band": "2c353d",
+    "flash": "fff6e0",
+    "blade": "f6dfa8",
+    "marker_core": "e8b860",
+    "text": "f6ead2",
+    "text_gold": "ffe98a"
+  }
+}

@@ -34,7 +34,7 @@ var _sparks: Node2D
 
 func _ready() -> void:
 	super._ready()
-	life = land(index) + WAKE
+	life = gone(index) + WAKE
 	if index == 0:
 		_frost = Art.quad("frost")
 		(stage.get("under") as Node2D).add_child(_frost)
@@ -62,8 +62,8 @@ func _swarm() -> bool: return count > 6
 ## Straight, always: start to mark. A swarm's spears each pick a spot on the target.
 func path_at(i: int, u: float) -> Vector2:
 	var s := pow(clampf(u, 0.0, 1.0), ease)
-	var mark := end_point()
-	if count > 1: mark += Vector2(rnd2(i * 3 + 500) * 14.0, rnd2(i * 3 + 501) * 34.0)
+	var mark := end_point(i)
+	if count > 1 and end != "at": mark += Vector2(rnd2(i * 3 + 500) * 14.0, rnd2(i * 3 + 501) * 34.0)
 	return start_point(i).lerp(mark, s)
 
 ## From `self` a volley hangs in a cloud behind and above the caster, bobbing until it
@@ -91,7 +91,7 @@ func _update() -> void:
 	var dir := (path_at(index, 0.05) - pos).normalized()
 	var speed := 0.0
 	var grow := 1.0
-	var alive := age >= t0 and age < t2
+	var alive := age >= t0 and age < gone(index)
 	# It rolls the whole time, spinning up as it forms; the bigger, the slower.
 	var spin := Crystal.roll_speed(size)
 	var roll := (age - t0) * spin * 0.5 + seed_id
@@ -108,7 +108,10 @@ func _update() -> void:
 		dir = v.normalized()
 		roll = spin * (age - t1) + spin * 0.25 * charge + seed_id
 	else:
-		pos = path_at(index, 1.0)
+		# Lingering: stuck where it landed, a third of it sunk in, still glinting.
+		dir = velocity_at(index, 1.0).normalized()
+		pos = path_at(index, 1.0) + dir * LENGTH * size * 0.3
+		roll = spin * travel + spin * 0.25 * charge + seed_id
 	if alive:
 		var length := LENGTH * size * grow
 		Crystal.prism_at(crystal, pos - dir * length * 0.1, dir, length, RADIUS * size * grow, roll, 0.95)

@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import re
 import shutil
 import sys
@@ -36,11 +37,27 @@ THICKNESS = {"thin": 0.6, "medium": 1.0, "normal": 1.0, "bold": 1.4}
 HEX = re.compile(r"^#?[0-9a-fA-F]{6}$")
 ROLES = {"background", "ground", "outline", "flash", "dummy", "dummy_band", "blade", "marker_core", "text", "text_gold"}
 PALETTES = {"normal", "violet", "red", "gold", "green"}
-EVENTS = {"slash", "move", "hit", "charge", "flash_step", "cut", "cast"}
+EVENTS = {"slash", "move", "hit", "charge", "flash_step", "cut", "cast", "camera"}
 # cast (the magic renderer, "renderer": "magic"): what it is and how it travels.
-ELEMENTS = {"fire", "thunder", "ice", "wind"}
+ELEMENTS = {"fire", "thunder", "ice", "wind", "sand"}
 CAST_CHOICES = {"start": {"hand", "above", "sky", "behind", "self", "below", "target"}, "end": {"target", "ground", "self"},
                 "path": {"straight", "arc", "wave", "spiral", "stay"}}
+SHAPES = {"", "comet", "beam", "ring", "pillar", "vortex", "circle"}
+
+
+def number(value) -> bool:
+    return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
+
+
+def point(value) -> bool:
+    return isinstance(value, list) and len(value) == 2 and all(number(v) for v in value)
+
+
+def endpoint(value, choices) -> bool:
+    if isinstance(value, str):
+        return value in choices
+    return point(value) or (isinstance(value, list) and bool(value) and all(
+        (isinstance(v, str) and v in choices) or point(v) for v in value))
 
 
 def hex6(value: str) -> str:
@@ -68,7 +85,7 @@ def check_combo(combo: dict) -> int:
         where = f"event {i}"
         if not isinstance(e, dict) or e.get("do") not in EVENTS:
             raise SystemExit(f"{where}: \"do\" must be one of {', '.join(sorted(EVENTS))}")
-        if not isinstance(e.get("t"), (int, float)) or e["t"] < 0:
+        if not number(e.get("t")) or e["t"] < 0:
             raise SystemExit(f"{where}: \"t\" must be a number of seconds >= 0")
         if "palette" in e and e["palette"] not in PALETTES:
             raise SystemExit(f"{where}: palette must be one of {', '.join(sorted(PALETTES))}")
@@ -78,8 +95,31 @@ def check_combo(combo: dict) -> int:
             if e.get("element", "fire") not in ELEMENTS:
                 raise SystemExit(f"{where}: element must be one of {', '.join(sorted(ELEMENTS))}")
             for key, choices in CAST_CHOICES.items():
-                if key in e and e[key] not in choices:
+                if key not in e:
+                    continue
+                valid = endpoint(e[key], choices) if key in {"start", "end"} else isinstance(e[key], str) and e[key] in choices
+                if not valid:
                     raise SystemExit(f"{where}: {key} must be one of {', '.join(sorted(choices))}")
+            if not isinstance(e.get("shape", ""), str) or e.get("shape", "") not in SHAPES:
+                raise SystemExit(f"{where}: unknown magic shape")
+            if not isinstance(e.get("mix", []), list) or any(not isinstance(x, str) or x not in ELEMENTS for x in e.get("mix", [])):
+                raise SystemExit(f"{where}: mix must be a list of known elements")
+            for key in ("charge", "travel", "interval", "radius", "hold", "linger"):
+                if key in e and (not number(e[key]) or e[key] < 0):
+                    raise SystemExit(f"{where}: {key} must be a finite non-negative number")
+            for key in ("size", "swell", "ease"):
+                if key in e and (not number(e[key]) or e[key] <= 0):
+                    raise SystemExit(f"{where}: {key} must be positive")
+            if "count" in e and (not number(e["count"]) or e["count"] < 1 or int(e["count"]) != e["count"]):
+                raise SystemExit(f"{where}: count must be a positive integer")
+            if "burst" in e and not isinstance(e["burst"], bool):
+                raise SystemExit(f"{where}: burst must be true or false")
+        if e["do"] == "camera":
+            if not point(e.get("at", [640, 360])):
+                raise SystemExit(f"{where}: camera at must be [x, y]")
+            for key, default in (("zoom", 1), ("time", .5)):
+                if not number(e.get(key, default)) or e.get(key, default) <= 0:
+                    raise SystemExit(f"{where}: camera {key} must be positive")
     hits = sum(1 for e in events if e["do"] == "hit")
     if hits == 0:
         raise SystemExit("combo.json has no \"hit\" event")

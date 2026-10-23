@@ -21,6 +21,13 @@ extends Node2D
 ##   charge  seconds the body gathers at the start before it flies; travel: flight seconds
 ##   count, interval, spread — a volley: `count` bodies launched `interval` apart, fanned
 ##           by `spread` px; radius — the blast's reach at the end, px; size — the body
+##   start / end may also be a point [x, y], or a list (body i takes item i, round and
+##   round) of points and names — a chain is one cast whose ends are the next starts.
+##   linger  seconds a body stays at its end after landing (hanging, stuck in the floor);
+##           while it lingers, another cast's burst near it sets it off early
+##   burst   true: each body bursts where it ends (its element's impact, and each `mix`
+##           element's) without hitting the target — on landing, or when its linger is up
+##   mix     more elements the spell is made of (vfx/magic_stage.gd)
 
 const GROUND_Y := 520.0
 const TARGET_SIZE := Vector2(44, 96)
@@ -51,6 +58,20 @@ var interval := 0.1
 var spread := 0.0
 var radius := 70.0
 var hold := 0.0
+var linger := 0.0
+var burst := false
+## The points of a start or end given as a list ("at"): each a name or [x, y].
+var starts: Array = []
+var ends: Array = []
+## The element scripts the spell is made of: its own first, then its `mix`.
+var materials: Array = []
+## Which cast it belongs to (a burst only sets off other casts' lingering bodies).
+var cast_id := 0
+## False for effects that are one body each (`index`); effects that stand in one place for
+## the whole volley burst at their own landings instead.
+var one_body := true
+var _cut := INF
+var _burst_done := false
 
 func configure(preset: Dictionary) -> Node2D:
 	for key: String in preset: set(key, preset[key])
@@ -61,9 +82,28 @@ func _ready() -> void:
 
 func advance(delta: float) -> void:
 	age += delta
+	if part == "spell" and one_body and not _burst_done and (burst or _cut < INF) and age >= gone(index):
+		_burst_done = true
+		stage.call("burst", cast_id, path_at(index, 1.0), self)
 
 func is_done() -> bool:
 	return age >= life
+
+## When body `i` leaves its end: landing, plus its linger (cut short if it is set off).
+func gone(i: int) -> float: return minf(land(i) + linger, _cut)
+
+## Whether the body is hanging at its end now, waiting.
+func lingering() -> bool: return linger > 0.0 and age >= land(index) and age < gone(index)
+
+## Another cast's burst went off by it: it bursts now.
+func detonate() -> void:
+	if lingering(): _cut = age
+
+## A whole-volley effect's burst at `point` when its landing `t` has just passed.
+func burst_once(t: float, point: Vector2) -> void:
+	if not burst or _burst_done or age < t: return
+	_burst_done = true
+	stage.call("burst", cast_id, point, self)
 
 ## Restarts a status that is hit again instead of stacking a second one.
 func renew(longer: bool) -> void:
@@ -89,8 +129,12 @@ func aim() -> Vector2: return stage.target.position + Vector2(-4, -TARGET_SIZE.y
 func _middle() -> float: return (count - 1) * 0.5
 
 func start_point(i: int) -> Vector2:
+	if start == "at": return _listed(starts, i, true)
+	return _named_start(start, i)
+
+func _named_start(name: String, i: int) -> Vector2:
 	var fan := (float(i) - _middle()) * spread
-	match start:
+	match name:
 		"above": return stage.attacker.position + Vector2(-10 + fan * 0.6, -150)
 		"sky": return aim() + Vector2(-300 + fan, -400)
 		"behind": return stage.target.position + Vector2(300, -260 + fan * 0.5)
@@ -102,11 +146,24 @@ func start_point(i: int) -> Vector2:
 ## The middle of the caster, live.
 func body_of_caster() -> Vector2: return stage.attacker.position + Vector2(0, -4)
 
-func end_point() -> Vector2:
-	match end:
+## Where body `i` (this body, by default) ends.
+func end_point(i := -1) -> Vector2:
+	if i < 0: i = index
+	if end == "at": return _listed(ends, i, false)
+	return _named_end(end)
+
+func _named_end(name: String) -> Vector2:
+	match name:
 		"ground": return Vector2(stage.target.position.x, GROUND_Y - 4.0)
 		"self": return body_of_caster()
 	return aim()
+
+## Item i (round and round) of a start or end list: a point [x, y] or a name.
+func _listed(spots: Array, i: int, is_start: bool) -> Vector2:
+	if spots.is_empty(): return aim()
+	var item: Variant = spots[posmod(i, spots.size())]
+	if item is Array: return Vector2(float(item[0]), float(item[1]))
+	return _named_start(String(item), i) if is_start else _named_end(String(item))
 
 ## Body `i`'s point at flight fraction u (0 … 1), the speed curve applied. The end is live,
 ## so the body homes on a target that is knocked away mid-flight.
@@ -114,7 +171,7 @@ func path_at(i: int, u: float) -> Vector2:
 	var s := pow(clampf(u, 0.0, 1.0), ease)
 	if path == "stay": return start_point(i)
 	var a := start_point(i)
-	var b := end_point()
+	var b := end_point(i)
 	var d := b - a
 	var up := d.orthogonal().normalized()
 	if up.y > 0.0: up = -up

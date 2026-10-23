@@ -14,7 +14,7 @@ func _ready() -> void:
 	caption.position = Vector2(70, 100)
 	caption.add_theme_font_size_override("font_size", 32)
 	caption.modulate = ComboStyle.c("blade")
-	add_child(caption)
+	overlay.add_child(caption)
 	rhythm = Label.new()
 	rhythm.position = Vector2(70, 585)
 	rhythm.text = "蓄 —— 斩 —— 返 —— 疾 · 疾 · 疾 —— 旋升 —— 空切 —— 断空"

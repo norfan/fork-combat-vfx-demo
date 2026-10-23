@@ -1,0 +1,20 @@
+{
+  "title": "大元素使 · 万象归一",
+  "language": "zh",
+  "renderer": "magic",
+  "thickness": 1.0,
+  "pixel": 3,
+  "colors": {
+    "background": "0b1020",
+    "ground": "26324a",
+    "outline": "050811",
+    "dummy": "56636e",
+    "dummy_band": "2c353d",
+    "flash": "fffbe6",
+    "blade": "ffdf5c",
+    "marker_core": "ffd37a",
+    "text": "e8efff",
+    "text_gold": "ffdf5c"
+  },
+  "magic_quality": "explosive"
+}

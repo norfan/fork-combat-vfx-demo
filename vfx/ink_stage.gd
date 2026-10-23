@@ -11,7 +11,7 @@ func _ready() -> void:
 	caption.position = Vector2(80, 125)
 	caption.add_theme_font_size_override("font_size", 32)
 	caption.add_theme_color_override("font_color", Color("28382e"))
-	add_child(caption)
+	overlay.add_child(caption)
 	rhythm = Label.new()
 	rhythm.position = Vector2(80, 590)
 	rhythm.add_theme_font_size_override("font_size", 22)

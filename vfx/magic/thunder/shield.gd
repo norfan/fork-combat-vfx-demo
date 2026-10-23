@@ -25,7 +25,9 @@ func _update() -> void:
 	var lights: Array = []
 	var sparks: Array = []
 	var mesh := Arcs.data()
-	var centre := start_point(0)
+	# Keep the same spherical shell when a ring is sent along a flight path.
+	# path_at preserves the live caster anchor for the original stationary shield.
+	var centre := path_at(0, clampf((age - t1) / maxf(travel, 0.001), 0.0, 1.0))
 	var blue := Color(0.55, 0.72, 1.0)
 	if age < t1:
 		var k := clampf(age / maxf(charge, 0.01), 0.0, 1.0)

@@ -20,7 +20,9 @@ const COUNTER_POP := 0.14
 ## slash: crescent anchored on the attacker (degrees, y down, facing right); a very flat
 ## one (squash ~0.16) through 0° is the thrust. move: attacker glides by `by`.
 ## hit: target reaction. charge: glint on the attacker. flash_step: instant move with a
-## smear left behind. cut: a straight cut drawn across the target.
+## smear left behind. cut: a straight cut drawn across the target. camera: the view eases
+## over `time` s to `zoom` (1 = the whole stage, 2 = twice as close) centred on `at` [x, y]
+## (kept inside the stage).
 ## Read from the combo's combo.json (references/combo_events.md), sorted by time.
 var TIMELINE: Array = []
 ## The combo.json this stage plays (set by ComboPlayer before it enters the tree).
@@ -33,6 +35,7 @@ const EVENT_DEFAULTS := {
 	"hit": {"push": 60.0, "stop": 0.05, "shake": 2.5, "spark": 46.0},
 	"flash_step": {"past": 140.0},
 	"cut": {"angle": 0.0},
+	"camera": {"zoom": 1.0, "at": [640, 360], "time": 0.5},
 }
 
 ## Reads the events; `by` becomes a Vector2 and `palette` a StringName.
@@ -58,6 +61,10 @@ static func parse_events(raw_events: Array) -> Array:
 	events.sort_custom(func(x: Dictionary, y: Dictionary) -> bool: return x.t < y.t)
 	return events
 
+## Combo seconds of the last event.
+func clock_end() -> float:
+	return 0.0 if TIMELINE.is_empty() else float(TIMELINE[-1].t)
+
 func expected_hits() -> int:
 	return TIMELINE.filter(func(e: Dictionary) -> bool: return e.do == "hit").size()
 ## Combo seconds after the last event until everything has settled.
@@ -79,6 +86,10 @@ var _target_velocity := Vector2.ZERO
 var _target_flash := 0.0
 var _counter_age := 99.0
 var _camera: Camera2D
+## {from_zoom, to_zoom, from, to, age, time} while the camera eases somewhere.
+var _view := {}
+## Text that stays put on screen whatever the camera does (help, captions).
+var overlay: CanvasLayer
 
 class Marker extends Node2D:
 	## The abstract attacker: a diamond core with a ground shadow.
@@ -124,12 +135,15 @@ func _ready() -> void:
 	counter.add_theme_constant_override("outline_size", 10)
 	counter.z_index = 10
 	add_child(counter)
+	overlay = CanvasLayer.new()
+	overlay.layer = 20
+	add_child(overlay)
 	help = Label.new()
 	help.text = ComboStyle.t("combo_help") % ComboStyle.t("slow_off")
 	help.position = Vector2(24, 20)
 	help.add_theme_font_size_override("font_size", 22)
 	help.add_theme_color_override("font_color", ComboStyle.c("text"))
-	add_child(help)
+	overlay.add_child(help)
 	reset()
 
 func reset() -> void:
@@ -146,6 +160,9 @@ func reset() -> void:
 	for child in attacker.get_children(): child.free()
 	attacker.position = ATTACKER_START
 	target.position = TARGET_START
+	_view = {}
+	_camera.zoom = Vector2.ONE
+	_camera.position = Vector2(640, 360)
 	counter.visible = false
 	_refresh()
 
@@ -188,6 +205,7 @@ func advance(delta: float) -> void:
 			if _stop > 0.0: break
 		if _next >= TIMELINE.size() and (TIMELINE.is_empty() or clock > TIMELINE[-1].t + SETTLE): playing = false
 	_update_moves(delta)
+	_update_view(delta)
 	_update_target(delta)
 	for holder in [fx, attacker]:
 		for part in holder.get_children():
@@ -230,6 +248,10 @@ func _fire(event: Dictionary) -> void:
 				"line_gap": 5.0, "line_width": 3.0, "palette": &"gold", "arrow_head": false}))
 			_stop = 0.1  # the stillness after 一闪, before the cuts appear
 			_shake(3.0, 0.08)
+		"camera":
+			var at: Array = event.at
+			_view = {"from_zoom": _camera.zoom.x, "to_zoom": maxf(float(event.zoom), 1.0), "from": _camera.position,
+				"to": Vector2(float(at[0]), float(at[1])), "age": 0.0, "time": maxf(float(event.time), 0.001)}
 		"cut":
 			var middle := target.position + Vector2(0, -TARGET_SIZE.y * 0.5)
 			var along := Vector2.from_angle(deg_to_rad(float(event.angle))) * 95.0
@@ -272,6 +294,17 @@ func _update_moves(delta: float) -> void:
 		var t := PixelSlash.ease_swing(move.age / move.time)
 		attacker.position = (move.from as Vector2).lerp(move.to, t)
 	_moves = _moves.filter(func(m: Dictionary) -> bool: return m.age < m.time)
+
+## Eases the camera towards the last camera event's view, never showing past the stage.
+func _update_view(delta: float) -> void:
+	if _view.is_empty(): return
+	_view.age = minf(float(_view.age) + delta, float(_view.time))
+	var t := smoothstep(0.0, 1.0, float(_view.age) / float(_view.time))
+	var zoom := lerpf(float(_view.from_zoom), float(_view.to_zoom), t)
+	var half := Vector2(640, 360) / zoom
+	var at := (_view.from as Vector2).lerp(_view.to, t)
+	_camera.zoom = Vector2.ONE * zoom
+	_camera.position = Vector2(clampf(at.x, half.x, 1280.0 - half.x), clampf(at.y, half.y, 720.0 - half.y))
 
 func _update_target(delta: float) -> void:
 	var airborne := target.position.y < GROUND_Y - 0.5 or _target_velocity.y < 0.0

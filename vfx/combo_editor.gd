@@ -12,14 +12,15 @@ const COMBOS := "res://combos"
 const GALLERY := "res://main.tscn"
 const RENDERERS := ["", "ribbon", "claw", "ink", "magic"]
 const RENDERER_NAMES := ["月牙（默认）", "轨迹刀光", "爪痕", "水墨", "魔法"]
-const DOS := ["slash", "hit", "move", "charge", "flash_step", "cut", "cast"]
-const DO_NAMES := {"slash": "斩击", "hit": "命中", "move": "位移", "charge": "蓄力", "flash_step": "一闪", "cut": "刀痕", "cast": "施法"}
-const DO_COLOURS := {"slash": Color("6fd6e8"), "hit": Color("ff6a6a"), "move": Color("9aa7b4"), "charge": Color("ffd166"), "flash_step": Color("c99bff"), "cut": Color("ffa14d"), "cast": Color("7dffb0")}
+const DOS := ["slash", "hit", "move", "charge", "flash_step", "cut", "cast", "camera"]
+const DO_NAMES := {"slash": "斩击", "hit": "命中", "move": "位移", "charge": "蓄力", "flash_step": "一闪", "cut": "刀痕", "cast": "施法", "camera": "镜头"}
+const DO_COLOURS := {"slash": Color("6fd6e8"), "hit": Color("ff6a6a"), "move": Color("9aa7b4"), "charge": Color("ffd166"), "flash_step": Color("c99bff"), "cut": Color("ffa14d"), "cast": Color("7dffb0"), "camera": Color("e0b2ff")}
 const MAGIC_STAGE := "res://vfx/magic_stage.gd"
-const ELEMENTS := ["fire", "thunder", "ice", "wind"]
-const ELEMENT_NAMES := ["火", "雷", "冰", "风"]
+const ELEMENTS := ["fire", "thunder", "ice", "wind", "sand"]
+const ELEMENT_NAMES := ["火", "雷", "冰", "风", "沙"]
 ## A cast's skeleton choices (vfx/magic/magic_fx.gd) and their names.
 const CAST_OPTIONS := {
+	"shape": [["", "comet", "beam", "ring", "pillar", "vortex", "circle"], ["自动", "彗星 / 弹体", "光束 / 丝线", "环", "柱", "漩涡", "法阵"]],
 	"start": [["hand", "above", "sky", "behind", "self", "below", "target"], ["手上", "头顶", "高空", "目标后上方", "自身", "目标脚下地底", "目标身上"]],
 	"end": [["target", "ground", "self"], ["目标身上", "目标脚下地面", "自身周围"]],
 	"path": [["straight", "arc", "wave", "spiral", "stay"], ["直线", "弧线", "蛇行", "螺旋", "原地（跟着起点）"]],
@@ -51,14 +52,19 @@ const FIELDS := {
 	"charge": [["t", "时间", 0, 20, 0.005, 0.0, ""]],
 	"flash_step": [["t", "时间", 0, 20, 0.005, 0.0, ""], ["past", "穿过距离", 0, 600, 1, 140, ""]],
 	"cut": [["t", "时间", 0, 20, 0.005, 0.0, ""], ["angle", "角度", -180, 180, 1, 0, ""], ["palette", "颜色", 0, 0, 0, "normal", ""]],
+	"camera": [["t", "时间", 0, 120, 0.005, 0.0, ""], ["zoom", "放大倍率", 1, 4, 0.05, 1.0, ""],
+		["at_x", "中心 X", 0, 1280, 1, 640, ""], ["at_y", "中心 Y", 0, 720, 1, 360, ""], ["time", "推拉用时", 0.01, 10, 0.05, 0.5, ""]],
 	"cast": [["t", "时间", 0, 20, 0.005, 0.0, ""], ["element", "元素", 0, 0, 0, "fire", ""],
+		["shape", "形状", 0, 0, 0, "", "cast"], ["mix", "混合材质", 0, 0, 0, 0, "cast"],
 		["start", "起点", 0, 0, 0, "hand", "cast"], ["end", "终点", 0, 0, 0, "target", "cast"], ["path", "路径", 0, 0, 0, "arc", "cast"],
 		["arc", "弧度", -400, 400, 1, 70, "f:arc"], ["wave", "摆幅", 0, 300, 1, 40, "f:wave|spiral"], ["turns", "圈数 / 摆动次数", 0.5, 8, 0.1, 2, "f:wave|spiral"],
 		["ease", "速度曲线（>1 越飞越快）", 0.3, 4, 0.05, 1.25, "cast"], ["charge", "凝聚时间", 0, 2, 0.005, 0.22, "cast"],
 		["travel", "飞行时间（原地：维持多久）", 0.02, 5, 0.005, 0.36, "cast"], ["count", "数量", 1, 12, 1, 1, "cast"],
 		["interval", "间隔", 0, 1, 0.005, 0.12, "cast"], ["spread", "散开", -400, 400, 1, 36, "cast"],
 		["radius", "打击范围", 10, 400, 1, 70, "cast"], ["size", "本体大小", 0.3, 4, 0.05, 1.0, "cast"],
-		["hold", "持续（雷：劈中后闪多久；火柱：最后一击后烧多久）", 0, 3, 0.005, 0.22, "cast"], ["jag", "折角（锯齿感）", 0, 0.8, 0.01, 0.28, "e:thunder"]],
+		["hold", "持续", 0, 3, 0.005, 0.22, "cast"], ["linger", "落点悬停", 0, 10, 0.05, 0.0, "cast"],
+		["burst", "结束时爆开", 0, 0, 0, false, "cast"], ["swell", "末段缩放倍率", 0.01, 5, 0.05, 1.0, "cast"],
+		["jag", "折角（锯齿感）", 0, 0.8, 0.01, 0.28, "e:thunder"]],
 }
 
 class Host extends Node2D:
@@ -389,7 +395,8 @@ func _add_event() -> void:
 	for field: Array in FIELDS[kind]:
 		if field[0] == "t" or field[6] in ["claw", "optional", "bool", "timed", "stock", "cast"] or String(field[6]).substr(0, 2) in ["k:", "f:", "e:"]: continue
 		if field[0] == "by_x": e["by"] = [20, 0]
-		elif field[0] != "by_y": e[field[0]] = field[5]
+		elif field[0] == "at_x": e["at"] = [640, 360]
+		elif field[0] not in ["by_y", "at_y"]: e[field[0]] = field[5]
 	if kind == "slash" and _renderer() in ["ribbon", "claw"]: e.merge({"duration": 0.16, "tail": 0.2})
 	if kind == "slash" and _renderer() == "claw": e["claw"] = "arc"
 	if kind == "slash" and _renderer() in ["", "ink"]: e["radius"] = 160
@@ -432,6 +439,8 @@ func _set_field(key: String, value: Variant) -> void:
 	_remember("%d:%s" % [selected, key])
 	var e: Dictionary = data.events[selected]
 	match key:
+		"at_x": e["at"] = [value, (e.get("at", [640, 360]) as Array)[1]]
+		"at_y": e["at"] = [(e.get("at", [640, 360]) as Array)[0], value]
 		"by_x": e["by"] = [value, (e.get("by", [0, 0]) as Array)[1]]
 		"by_y": e["by"] = [(e.get("by", [0, 0]) as Array)[0], value]
 		_: e[key] = value
@@ -550,13 +559,14 @@ func _summary(e: Dictionary) -> String:
 			return "(%.0f, %.0f) %.2fs" % [float(by[0]), float(by[1]), float(e.get("time", 0.08))]
 		"flash_step": return "穿过 %.0f" % float(e.get("past", 140))
 		"cut": return "角度 %.0f" % float(e.get("angle", 0))
+		"camera": return "放大 ×%.2f  %.2fs" % [float(e.get("zoom", 1.0)), float(e.get("time", 0.5))]
 		"cast":
 			var spec: Dictionary = load(MAGIC_STAGE).cast_spec(e)
 			var element: String = ELEMENT_NAMES[maxi(0, ELEMENTS.find(String(e.get("element", "fire"))))]
 			var route := PackedStringArray()
 			for key: String in ["start", "path", "end"]:
 				var options: Array = CAST_OPTIONS[key]
-				route.append(String(options[1][maxi(0, (options[0] as Array).find(String(spec[key])))]))
+				route.append("坐标" if String(spec[key]) == "at" else String(options[1][maxi(0, (options[0] as Array).find(String(spec[key])))]))
 			var landing: Array = load(MAGIC_STAGE).contact_times(e)
 			return "%s %s ×%d  落点 %.2fs" % [element, "→".join(route), landing.size(), float(landing[0])]
 	return ""
@@ -598,9 +608,16 @@ func _options(names: Array, current: int, changed: Callable) -> OptionButton:
 	options.item_selected.connect(changed)
 	return options
 
+func _clear_panel(panel: Control) -> void:
+	# A control may be rebuilding its own panel from inside a signal callback.
+	# Detach immediately for layout, but keep the emitter alive until the frame ends.
+	for child in panel.get_children():
+		panel.remove_child(child)
+		child.queue_free()
+
 func _refresh_style() -> void:
 	_filling = true
-	for child in _style_box.get_children(): child.free()
+	_clear_panel(_style_box)
 	var heading := Label.new()
 	heading.text = "风格（整套）"
 	heading.add_theme_color_override("font_color", Color("ffe36b"))
@@ -631,7 +648,7 @@ func _refresh_style() -> void:
 
 func _refresh_inspector() -> void:
 	_filling = true
-	for child in _inspector.get_children(): child.free()
+	_clear_panel(_inspector)
 	var heading := Label.new()
 	heading.add_theme_color_override("font_color", Color("ffe36b"))
 	_inspector.add_child(heading)
@@ -659,17 +676,47 @@ func _refresh_inspector() -> void:
 			"element": _row(_inspector, field[1], _options(ELEMENT_NAMES, ELEMENTS.find(String(e.get("element", "fire"))), func(i: int) -> void:
 				_set_field("element", ELEMENTS[i])
 				_refresh_inspector()))
-			"start", "end", "path":
+			"mix":
+				var choices := GridContainer.new()
+				choices.columns = 3
+				for name: String in ELEMENTS:
+					var check := CheckBox.new()
+					check.text = ELEMENT_NAMES[ELEMENTS.find(name)]
+					check.button_pressed = name in (e.get("mix", []) as Array)
+					check.disabled = name == String(e.get("element", "fire"))
+					check.toggled.connect(func(on: bool) -> void:
+						var mixed: Array = (e.get("mix", []) as Array).duplicate()
+						if on and not mixed.has(name): mixed.append(name)
+						if not on: mixed.erase(name)
+						_set_field("mix", mixed))
+					choices.add_child(check)
+				_row(_inspector, field[1], choices)
+			"start", "end", "path", "shape":
 				var options: Array = CAST_OPTIONS[key]
 				var current := String((load(MAGIC_STAGE).cast_spec(e) as Dictionary)[key])
-				_row(_inspector, field[1], _options(options[1], (options[0] as Array).find(current), func(i: int) -> void:
-					_set_field(key, options[0][i])
+				var names: Array = (options[1] as Array).duplicate()
+				if key in ["start", "end"]: names.append("坐标 / 列表")
+				_row(_inspector, field[1], _options(names, names.size() - 1 if current == "at" else (options[0] as Array).find(current), func(i: int) -> void:
+					_set_field(key, [640, 360] if i == (options[0] as Array).size() else options[0][i])
 					_refresh_inspector()))
-			"finisher":
+				if current == "at":
+					var input := LineEdit.new()
+					input.text = JSON.stringify(e[key])
+					input.tooltip_text = "[x,y] 或 [[x,y],\"target\",...]；回车应用"
+					input.text_submitted.connect(func(text: String) -> void:
+						var points: Variant = JSON.parse_string(text)
+						if _valid_points(points, (options[0] as Array)):
+							_set_field(key, points)
+						else: _status.text = "坐标格式错误：使用 [x,y] 或坐标/名称列表")
+					_row(_inspector, "坐标列表", input)
+			"finisher", "burst":
 				var check := CheckBox.new()
-				check.button_pressed = bool(e.get("finisher", false))
-				check.toggled.connect(func(on: bool) -> void: _set_field("finisher", on))
+				check.button_pressed = bool(e.get(key, false))
+				check.toggled.connect(func(on: bool) -> void: _set_field(key, on))
 				_row(_inspector, field[1], check)
+			"at_x", "at_y":
+				var at: Array = e.get("at", [640, 360])
+				_row(_inspector, field[1], _spin(field[2], field[3], field[4], float(at[0 if key == "at_x" else 1]), func(v: float) -> void: _set_field(key, v)))
 			"by_x", "by_y":
 				var by: Array = e.get("by", [0, 0])
 				_row(_inspector, field[1], _spin(field[2], field[3], field[4], float(by[0 if key == "by_x" else 1]), func(v: float) -> void: _set_field(key, v)))
@@ -696,6 +743,17 @@ func _refresh_inspector() -> void:
 		_inspector.add_child(_button("对齐命中到每个落点（不够会自动补）", _align_hit))
 	_filling = false
 
+func _valid_points(value: Variant, names: Array) -> bool:
+	if not value is Array or (value as Array).is_empty(): return false
+	var points: Array = value
+	if points.size() == 2 and (points[0] is float or points[0] is int) and (points[1] is float or points[1] is int): return is_finite(float(points[0])) and is_finite(float(points[1]))
+	for item: Variant in points:
+		if item is String and item in names: continue
+		if not item is Array or (item as Array).size() != 2: return false
+		for n: Variant in item:
+			if not (n is float or n is int) or not is_finite(float(n)): return false
+	return true
+
 func _refresh_check() -> void:
 	var events: Array = data.events
 	var hits := events.filter(func(e: Dictionary) -> bool: return String(e.do) == "hit").size()
@@ -712,6 +770,8 @@ func _refresh_check() -> void:
 	# Casts whose projectiles land with no hit near that moment.
 	for e: Dictionary in events:
 		if String(e.do) != "cast": continue
+		# Scenery and delayed bursts do not need target hit bookkeeping.
+		if bool(e.get("burst", false)) or e.get("end", "target") is Array: continue
 		for landing: float in load(MAGIC_STAGE).contact_times(e):
 			if not events.any(func(h: Dictionary) -> bool: return String(h.do) == "hit" and absf(float(h.t) - landing) < 0.03):
 				lines.append("⚠ %.3fs 的施法在 %.3fs 落到目标，附近没有命中（选中它按「对齐命中」）" % [float(e.t), landing])

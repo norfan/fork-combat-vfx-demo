@@ -1,0 +1,1059 @@
+{
+  "name": "大元素使 · 万象归一",
+  "captions": [
+    [
+      0,
+      "五相归位 · 法阵展开"
+    ],
+    [
+      3,
+      "火，起 · 流火花冠"
+    ],
+    [
+      6.25,
+      "冰，落 · 冰晶落阵"
+    ],
+    [
+      7.9,
+      "沙，织 · 金沙锁阵"
+    ],
+    [
+      10,
+      "雷，连 · 连锁引爆"
+    ],
+    [
+      12.2,
+      "风，卷 · 五相风暴"
+    ],
+    [
+      18.05,
+      "收束 · 万象回流"
+    ],
+    [
+      20.1,
+      "刚才那些……都是材料"
+    ],
+    [
+      22.8,
+      "万象归一"
+    ],
+    [
+      27,
+      "五元素 · 六种形状 · 同一套骨架"
+    ]
+  ],
+  "events": [
+    {
+      "t": 0,
+      "do": "camera",
+      "zoom": 1.15,
+      "at": [
+        575,
+        350
+      ],
+      "time": 1
+    },
+    {
+      "t": 0.1,
+      "do": "cast",
+      "element": "sand",
+      "shape": "circle",
+      "mix": [
+        "fire",
+        "ice",
+        "thunder",
+        "wind"
+      ],
+      "start": [
+        360,
+        340
+      ],
+      "end": [
+        360,
+        340
+      ],
+      "path": "stay",
+      "charge": 1.8,
+      "travel": 1.1,
+      "radius": 174,
+      "size": 1.0
+    },
+    {
+      "t": 2.1,
+      "do": "camera",
+      "zoom": 1,
+      "at": [
+        640,
+        360
+      ],
+      "time": 0.8
+    },
+    {
+      "t": 3,
+      "do": "cast",
+      "element": "fire",
+      "shape": "comet",
+      "start": "above",
+      "end": [
+        [
+          1025.0,
+          255.0
+        ],
+        [
+          1008.25,
+          302.84
+        ],
+        [
+          960.56,
+          343.39
+        ],
+        [
+          889.19,
+          370.48
+        ],
+        [
+          805.0,
+          380.0
+        ],
+        [
+          720.81,
+          370.48
+        ],
+        [
+          649.44,
+          343.39
+        ],
+        [
+          601.75,
+          302.84
+        ],
+        [
+          585.0,
+          255.0
+        ],
+        [
+          601.75,
+          207.16
+        ],
+        [
+          649.44,
+          166.61
+        ],
+        [
+          720.81,
+          139.52
+        ],
+        [
+          805.0,
+          130.0
+        ],
+        [
+          889.19,
+          139.52
+        ],
+        [
+          960.56,
+          166.61
+        ],
+        [
+          1008.25,
+          207.16
+        ]
+      ],
+      "path": "spiral",
+      "wave": 75,
+      "turns": 1.5,
+      "charge": 0.4,
+      "travel": 0.95,
+      "count": 16,
+      "interval": 0.055,
+      "spread": 10,
+      "size": 0.65,
+      "radius": 52,
+      "linger": 5.3,
+      "burst": true
+    },
+    {
+      "t": 6.25,
+      "do": "cast",
+      "element": "ice",
+      "shape": "comet",
+      "start": [
+        [
+          1025.0,
+          255.0
+        ],
+        [
+          1008.25,
+          302.84
+        ],
+        [
+          960.56,
+          343.39
+        ],
+        [
+          889.19,
+          370.48
+        ],
+        [
+          805.0,
+          380.0
+        ],
+        [
+          720.81,
+          370.48
+        ],
+        [
+          649.44,
+          343.39
+        ],
+        [
+          601.75,
+          302.84
+        ],
+        [
+          585.0,
+          255.0
+        ],
+        [
+          601.75,
+          207.16
+        ],
+        [
+          649.44,
+          166.61
+        ],
+        [
+          720.81,
+          139.52
+        ],
+        [
+          805.0,
+          130.0
+        ],
+        [
+          889.19,
+          139.52
+        ],
+        [
+          960.56,
+          166.61
+        ],
+        [
+          1008.25,
+          207.16
+        ]
+      ],
+      "end": [
+        [
+          570,
+          510
+        ],
+        [
+          634,
+          510
+        ],
+        [
+          698,
+          510
+        ],
+        [
+          762,
+          510
+        ],
+        [
+          826,
+          510
+        ],
+        [
+          890,
+          510
+        ],
+        [
+          954,
+          510
+        ],
+        [
+          1018,
+          510
+        ],
+        [
+          1082,
+          510
+        ]
+      ],
+      "path": "straight",
+      "charge": 0.4,
+      "travel": 0.5,
+      "count": 9,
+      "interval": 0.08,
+      "spread": 0,
+      "size": 1.05,
+      "radius": 54,
+      "linger": 5.5,
+      "burst": true
+    },
+    {
+      "t": 7.9,
+      "do": "cast",
+      "element": "sand",
+      "shape": "beam",
+      "start": [
+        [
+          570,
+          510
+        ],
+        [
+          634,
+          510
+        ],
+        [
+          698,
+          510
+        ],
+        [
+          762,
+          510
+        ],
+        [
+          826,
+          510
+        ],
+        [
+          890,
+          510
+        ],
+        [
+          954,
+          510
+        ],
+        [
+          1018,
+          510
+        ]
+      ],
+      "end": [
+        [
+          634,
+          510
+        ],
+        [
+          698,
+          510
+        ],
+        [
+          762,
+          510
+        ],
+        [
+          826,
+          510
+        ],
+        [
+          890,
+          510
+        ],
+        [
+          954,
+          510
+        ],
+        [
+          1018,
+          510
+        ],
+        [
+          1082,
+          510
+        ]
+      ],
+      "path": "arc",
+      "arc": 95,
+      "charge": 0.4,
+      "travel": 0.18,
+      "count": 8,
+      "interval": 0.055,
+      "spread": 0,
+      "size": 0.85,
+      "hold": 1.0,
+      "radius": 35
+    },
+    {
+      "t": 8.3,
+      "do": "cast",
+      "element": "sand",
+      "shape": "vortex",
+      "start": "target",
+      "end": "target",
+      "path": "stay",
+      "charge": 0.45,
+      "travel": 0.65,
+      "count": 3,
+      "interval": 0.3,
+      "size": 0.85,
+      "radius": 65
+    },
+    {
+      "t": 9.4,
+      "do": "hit",
+      "push": 0,
+      "stop": 0.025,
+      "shake": 2.5
+    },
+    {
+      "t": 9.7,
+      "do": "hit",
+      "push": 0,
+      "stop": 0.025,
+      "shake": 2.5
+    },
+    {
+      "t": 10.0,
+      "do": "hit",
+      "push": 0,
+      "stop": 0.025,
+      "shake": 2.5
+    },
+    {
+      "t": 10.0,
+      "do": "cast",
+      "element": "thunder",
+      "shape": "beam",
+      "start": [
+        585.0,
+        255.0
+      ],
+      "end": [
+        649.44,
+        166.61
+      ],
+      "path": "straight",
+      "charge": 0.04,
+      "travel": 0.065,
+      "hold": 0.16,
+      "size": 0.8,
+      "radius": 95,
+      "burst": true
+    },
+    {
+      "t": 10.115,
+      "do": "cast",
+      "element": "thunder",
+      "shape": "beam",
+      "start": [
+        649.44,
+        166.61
+      ],
+      "end": [
+        805.0,
+        130.0
+      ],
+      "path": "straight",
+      "charge": 0.04,
+      "travel": 0.065,
+      "hold": 0.16,
+      "size": 0.8,
+      "radius": 95,
+      "burst": true
+    },
+    {
+      "t": 10.23,
+      "do": "cast",
+      "element": "thunder",
+      "shape": "beam",
+      "start": [
+        805.0,
+        130.0
+      ],
+      "end": [
+        960.56,
+        166.61
+      ],
+      "path": "straight",
+      "charge": 0.04,
+      "travel": 0.065,
+      "hold": 0.16,
+      "size": 0.8,
+      "radius": 95,
+      "burst": true
+    },
+    {
+      "t": 10.345,
+      "do": "cast",
+      "element": "thunder",
+      "shape": "beam",
+      "start": [
+        960.56,
+        166.61
+      ],
+      "end": [
+        1025.0,
+        255.0
+      ],
+      "path": "straight",
+      "charge": 0.04,
+      "travel": 0.065,
+      "hold": 0.16,
+      "size": 0.8,
+      "radius": 95,
+      "burst": true
+    },
+    {
+      "t": 10.46,
+      "do": "cast",
+      "element": "thunder",
+      "shape": "beam",
+      "start": [
+        1025.0,
+        255.0
+      ],
+      "end": [
+        1082,
+        510
+      ],
+      "path": "straight",
+      "charge": 0.04,
+      "travel": 0.065,
+      "hold": 0.16,
+      "size": 0.8,
+      "radius": 95,
+      "burst": true
+    },
+    {
+      "t": 10.575,
+      "do": "cast",
+      "element": "thunder",
+      "shape": "beam",
+      "start": [
+        1082,
+        510
+      ],
+      "end": [
+        954,
+        510
+      ],
+      "path": "straight",
+      "charge": 0.04,
+      "travel": 0.065,
+      "hold": 0.16,
+      "size": 0.8,
+      "radius": 95,
+      "burst": true
+    },
+    {
+      "t": 10.69,
+      "do": "cast",
+      "element": "thunder",
+      "shape": "beam",
+      "start": [
+        954,
+        510
+      ],
+      "end": [
+        826,
+        510
+      ],
+      "path": "straight",
+      "charge": 0.04,
+      "travel": 0.065,
+      "hold": 0.16,
+      "size": 0.8,
+      "radius": 95,
+      "burst": true
+    },
+    {
+      "t": 10.805,
+      "do": "cast",
+      "element": "thunder",
+      "shape": "beam",
+      "start": [
+        826,
+        510
+      ],
+      "end": [
+        698,
+        510
+      ],
+      "path": "straight",
+      "charge": 0.04,
+      "travel": 0.065,
+      "hold": 0.16,
+      "size": 0.8,
+      "radius": 95,
+      "burst": true
+    },
+    {
+      "t": 10.92,
+      "do": "cast",
+      "element": "thunder",
+      "shape": "beam",
+      "start": [
+        698,
+        510
+      ],
+      "end": [
+        570,
+        510
+      ],
+      "path": "straight",
+      "charge": 0.04,
+      "travel": 0.065,
+      "hold": 0.16,
+      "size": 0.8,
+      "radius": 95,
+      "burst": true
+    },
+    {
+      "t": 11.25,
+      "do": "cast",
+      "element": "thunder",
+      "shape": "beam",
+      "start": [
+        570,
+        510
+      ],
+      "end": "target",
+      "path": "straight",
+      "charge": 0.08,
+      "travel": 0.07,
+      "hold": 0.35,
+      "size": 1.3,
+      "radius": 100
+    },
+    {
+      "t": 11.4,
+      "do": "hit",
+      "push": 0,
+      "stop": 0.075,
+      "shake": 6
+    },
+    {
+      "t": 12.2,
+      "do": "cast",
+      "element": "wind",
+      "shape": "vortex",
+      "mix": [
+        "fire",
+        "ice",
+        "thunder",
+        "sand"
+      ],
+      "start": "target",
+      "end": "target",
+      "path": "stay",
+      "charge": 1.05,
+      "travel": 0.65,
+      "count": 6,
+      "interval": 0.65,
+      "size": 0.85,
+      "swell": 1.4,
+      "radius": 75
+    },
+    {
+      "t": 13.9,
+      "do": "hit",
+      "push": 0,
+      "stop": 0.025,
+      "shake": 3.0,
+      "launch": -60
+    },
+    {
+      "t": 14.55,
+      "do": "hit",
+      "push": 0,
+      "stop": 0.025,
+      "shake": 3.45,
+      "launch": -60
+    },
+    {
+      "t": 15.2,
+      "do": "hit",
+      "push": 0,
+      "stop": 0.025,
+      "shake": 3.9,
+      "launch": -60
+    },
+    {
+      "t": 15.85,
+      "do": "hit",
+      "push": 0,
+      "stop": 0.025,
+      "shake": 4.35,
+      "launch": -60
+    },
+    {
+      "t": 16.5,
+      "do": "hit",
+      "push": 0,
+      "stop": 0.025,
+      "shake": 4.8,
+      "launch": -60
+    },
+    {
+      "t": 17.15,
+      "do": "hit",
+      "push": 0,
+      "stop": 0.025,
+      "shake": 5.25,
+      "launch": -160
+    },
+    {
+      "t": 18.05,
+      "do": "cast",
+      "element": "wind",
+      "shape": "vortex",
+      "mix": [
+        "fire",
+        "ice",
+        "thunder",
+        "sand"
+      ],
+      "start": [
+        840,
+        450
+      ],
+      "end": [
+        840,
+        450
+      ],
+      "path": "stay",
+      "charge": 0.15,
+      "travel": 1.45,
+      "count": 1,
+      "size": 1.1,
+      "swell": 0.08,
+      "radius": 40
+    },
+    {
+      "t": 18.8,
+      "do": "cast",
+      "element": "fire",
+      "shape": "comet",
+      "mix": [
+        "sand"
+      ],
+      "start": [
+        840,
+        260
+      ],
+      "end": [
+        378,
+        446
+      ],
+      "path": "spiral",
+      "wave": 95,
+      "turns": 2,
+      "charge": 0.08,
+      "travel": 1.05,
+      "size": 0.55,
+      "radius": 25,
+      "linger": 0.2
+    },
+    {
+      "t": 18.87,
+      "do": "cast",
+      "element": "ice",
+      "shape": "comet",
+      "mix": [
+        "sand"
+      ],
+      "start": [
+        840,
+        305
+      ],
+      "end": [
+        378,
+        446
+      ],
+      "path": "spiral",
+      "wave": 95,
+      "turns": 2,
+      "charge": 0.08,
+      "travel": 1.05,
+      "size": 0.55,
+      "radius": 25,
+      "linger": 0.2
+    },
+    {
+      "t": 18.94,
+      "do": "cast",
+      "element": "thunder",
+      "shape": "comet",
+      "mix": [
+        "sand"
+      ],
+      "start": [
+        840,
+        350
+      ],
+      "end": [
+        378,
+        446
+      ],
+      "path": "spiral",
+      "wave": 95,
+      "turns": 2,
+      "charge": 0.08,
+      "travel": 1.05,
+      "size": 0.55,
+      "radius": 25,
+      "linger": 0.2
+    },
+    {
+      "t": 19.01,
+      "do": "cast",
+      "element": "wind",
+      "shape": "comet",
+      "mix": [
+        "sand"
+      ],
+      "start": [
+        840,
+        395
+      ],
+      "end": [
+        378,
+        446
+      ],
+      "path": "spiral",
+      "wave": 95,
+      "turns": 2,
+      "charge": 0.08,
+      "travel": 1.05,
+      "size": 0.55,
+      "radius": 25,
+      "linger": 0.2
+    },
+    {
+      "t": 19.08,
+      "do": "cast",
+      "element": "sand",
+      "shape": "comet",
+      "mix": [
+        "thunder"
+      ],
+      "start": [
+        840,
+        440
+      ],
+      "end": [
+        378,
+        446
+      ],
+      "path": "spiral",
+      "wave": 95,
+      "turns": 2,
+      "charge": 0.08,
+      "travel": 1.05,
+      "size": 0.55,
+      "radius": 25,
+      "linger": 0.2
+    },
+    {
+      "t": 19.3,
+      "do": "camera",
+      "zoom": 1.65,
+      "at": [
+        460,
+        410
+      ],
+      "time": 1
+    },
+    {
+      "t": 20.1,
+      "do": "cast",
+      "element": "fire",
+      "shape": "comet",
+      "mix": [
+        "ice",
+        "thunder",
+        "wind",
+        "sand"
+      ],
+      "start": "hand",
+      "end": "target",
+      "path": "straight",
+      "charge": 2.7,
+      "travel": 0.6,
+      "size": 1.25,
+      "radius": 125,
+      "burst": true
+    },
+    {
+      "t": 22.15,
+      "do": "camera",
+      "zoom": 1,
+      "at": [
+        640,
+        360
+      ],
+      "time": 0.65
+    },
+    {
+      "t": 23.4,
+      "do": "hit",
+      "push": 0,
+      "stop": 0.12,
+      "shake": 8,
+      "launch": -180
+    },
+    {
+      "t": 23.55,
+      "do": "cast",
+      "element": "fire",
+      "shape": "ring",
+      "mix": [
+        "sand"
+      ],
+      "start": [
+        840,
+        440
+      ],
+      "end": [
+        840,
+        440
+      ],
+      "path": "stay",
+      "charge": 0.12,
+      "travel": 0.6,
+      "size": 1.75,
+      "radius": 95,
+      "burst": true
+    },
+    {
+      "t": 23.8,
+      "do": "cast",
+      "element": "ice",
+      "shape": "pillar",
+      "mix": [
+        "sand"
+      ],
+      "start": [
+        840,
+        510
+      ],
+      "end": "target",
+      "path": "stay",
+      "charge": 0.25,
+      "travel": 0.4,
+      "size": 1.1,
+      "radius": 100,
+      "hold": 0.2
+    },
+    {
+      "t": 24.15,
+      "do": "cast",
+      "element": "thunder",
+      "shape": "beam",
+      "mix": [
+        "sand"
+      ],
+      "start": [
+        [
+          500,
+          150
+        ],
+        [
+          700,
+          80
+        ],
+        [
+          1050,
+          120
+        ],
+        [
+          1160,
+          260
+        ]
+      ],
+      "end": [
+        840,
+        440
+      ],
+      "path": "straight",
+      "charge": 0.2,
+      "travel": 0.12,
+      "count": 4,
+      "interval": 0.08,
+      "size": 1.2,
+      "radius": 55,
+      "hold": 0.18,
+      "burst": true
+    },
+    {
+      "t": 24.45,
+      "do": "hit",
+      "push": 0,
+      "stop": 0.06,
+      "shake": 7,
+      "launch": -240
+    },
+    {
+      "t": 24.65,
+      "do": "cast",
+      "element": "wind",
+      "shape": "ring",
+      "mix": [
+        "fire",
+        "ice",
+        "thunder",
+        "sand"
+      ],
+      "start": [
+        840,
+        430
+      ],
+      "end": [
+        840,
+        430
+      ],
+      "path": "stay",
+      "charge": 0.2,
+      "travel": 0.5,
+      "size": 2.4,
+      "radius": 125,
+      "burst": true
+    },
+    {
+      "t": 25.3,
+      "do": "cast",
+      "element": "sand",
+      "shape": "comet",
+      "mix": [
+        "fire",
+        "ice",
+        "thunder",
+        "wind"
+      ],
+      "start": [
+        840,
+        430
+      ],
+      "end": "target",
+      "path": "straight",
+      "charge": 0.2,
+      "travel": 0.3,
+      "size": 1.45,
+      "radius": 130,
+      "burst": true
+    },
+    {
+      "t": 25.8,
+      "do": "hit",
+      "push": 0,
+      "stop": 0.16,
+      "shake": 10,
+      "launch": 800,
+      "finisher": true
+    },
+    {
+      "t": 27.4,
+      "do": "camera",
+      "zoom": 1,
+      "at": [
+        640,
+        360
+      ],
+      "time": 0.2
+    }
+  ]
+}

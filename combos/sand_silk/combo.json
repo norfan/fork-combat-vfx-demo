@@ -1,0 +1,183 @@
+{
+  "name": "沙 · 魔法绘制器",
+  "captions": [
+    [
+      0.0,
+      "一 · 沙丝"
+    ],
+    [
+      1.25,
+      "二 · 三连沙丝"
+    ],
+    [
+      2.75,
+      "三 · 沙暴"
+    ],
+    [
+      5.55,
+      "四 · 千丝"
+    ]
+  ],
+  "events": [
+    {
+      "t": 0.1,
+      "do": "cast",
+      "element": "sand"
+    },
+    {
+      "t": 0.73,
+      "do": "hit",
+      "push": 80,
+      "stop": 0.06,
+      "shake": 4
+    },
+    {
+      "t": 1.3,
+      "do": "cast",
+      "element": "sand",
+      "count": 3,
+      "interval": 0.1,
+      "spread": 40
+    },
+    {
+      "t": 1.93,
+      "do": "hit",
+      "push": 40,
+      "stop": 0.04,
+      "shake": 3
+    },
+    {
+      "t": 2.03,
+      "do": "hit",
+      "push": 40,
+      "stop": 0.04,
+      "shake": 3
+    },
+    {
+      "t": 2.13,
+      "do": "hit",
+      "push": 40,
+      "stop": 0.04,
+      "shake": 3
+    },
+    {
+      "t": 2.8,
+      "do": "cast",
+      "element": "sand",
+      "start": "target",
+      "path": "stay",
+      "charge": 0.4,
+      "travel": 0.8,
+      "count": 4,
+      "interval": 0.3,
+      "radius": 50
+    },
+    {
+      "t": 4.0,
+      "do": "hit",
+      "push": 15,
+      "stop": 0.04,
+      "shake": 3
+    },
+    {
+      "t": 4.3,
+      "do": "hit",
+      "push": 15,
+      "stop": 0.04,
+      "shake": 3
+    },
+    {
+      "t": 4.6,
+      "do": "hit",
+      "push": 15,
+      "stop": 0.04,
+      "shake": 3
+    },
+    {
+      "t": 4.9,
+      "do": "hit",
+      "push": 200,
+      "stop": 0.08,
+      "shake": 7,
+      "launch": -420
+    },
+    {
+      "t": 5.6,
+      "do": "cast",
+      "element": "sand",
+      "count": 9,
+      "interval": 0.04,
+      "spread": 26,
+      "size": 0.8,
+      "radius": 30,
+      "path": "arc",
+      "arc": 70,
+      "charge": 0.6
+    },
+    {
+      "t": 6.38,
+      "do": "hit",
+      "push": 15,
+      "stop": 0.02,
+      "shake": 2
+    },
+    {
+      "t": 6.42,
+      "do": "hit",
+      "push": 15,
+      "stop": 0.02,
+      "shake": 2
+    },
+    {
+      "t": 6.46,
+      "do": "hit",
+      "push": 15,
+      "stop": 0.02,
+      "shake": 2
+    },
+    {
+      "t": 6.5,
+      "do": "hit",
+      "push": 15,
+      "stop": 0.02,
+      "shake": 2
+    },
+    {
+      "t": 6.54,
+      "do": "hit",
+      "push": 15,
+      "stop": 0.02,
+      "shake": 2
+    },
+    {
+      "t": 6.58,
+      "do": "hit",
+      "push": 15,
+      "stop": 0.02,
+      "shake": 2
+    },
+    {
+      "t": 6.62,
+      "do": "hit",
+      "push": 15,
+      "stop": 0.02,
+      "shake": 2
+    },
+    {
+      "t": 6.66,
+      "do": "hit",
+      "push": 15,
+      "stop": 0.02,
+      "shake": 2
+    },
+    {
+      "t": 6.7,
+      "do": "hit",
+      "push": 260,
+      "stop": 0.13,
+      "shake": 10,
+      "launch": -480,
+      "finisher": true
+    }
+  ]
+}

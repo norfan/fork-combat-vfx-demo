@@ -23,7 +23,7 @@ vfx/            the effect code: combo_player.gd (scene root), combo_stage.gd (t
                 ribbon_stage.gd + trajectory_ribbon.gd + trajectory_ribbon.gdshader (blade ribbons);
                 claw_stage.gd + claw_rake.gd (claw marks); magic_stage.gd + magic/ (off-hand
                 magic: magic_fx.gd, magic_art.gd, fire.gd + fire/, thunder.gd + thunder/,
-                ice.gd + ice/, wind.gd + wind/, shaders/); combo_editor.gd (the hand-tuning editor)
+                ice.gd + ice/, wind.gd + wind/, sand.gd + sand/, shaders/); combo_editor.gd (the hand-tuning editor)
 combos/<name>/  <name>.tscn, combo.json (the events), style.json (the look), prompt.md
 styles/         style presets: default, ember, neon, ink
 tools/          new_combo.py, verify_combo.py, frames_to_gif.py, frames_to_review.py,
@@ -60,7 +60,7 @@ the move's name alone does not decide the renderer.
 | Crescent | Broad cuts, sword-energy shapes, attacks with a strong complete silhouette | Omit `renderer`, or set it to `""` |
 | Blade ribbon | Weapon-following swings, consecutive clashes, spins, natural trailing and recovery | `"renderer": "ribbon"` |
 | Claw marks | Claws and rending: fanned crescent gashes with thin trails — horizontal swipes, dashes, cross slashes, rakes, big loops and slams — that scratch the target on every hit (see `combos/claw_cyclone`) | `"renderer": "claw"` |
-| Magic | Off-hand spells (`cast` events) at full resolution with shaders: a skeleton (start, end, path, blast radius) carrying a body and accessories that follow it — fire, thunder, ice and wind, see `combos/fire_fireball`, `combos/thunder_bolt`, `combos/ice_spear` | `"renderer": "magic"` |
+| Magic | Off-hand spells (`cast` events) at full resolution with shaders: a skeleton (start, end, path, blast radius) carrying a body and accessories that follow it — fire, thunder, ice, wind and sand, see `combos/fire_fireball`, `combos/thunder_bolt`, `combos/ice_spear` | `"renderer": "magic"` |
 
 Specify your choice in the skill prompt, for example:
 
@@ -83,6 +83,14 @@ Do not change only the renderer name while keeping the old contact timing. See t
 [event fields](references/combo_events.md#sampled-trajectory-renderer).
 
 ## Examples: prompt → result
+
+### Elementalist — [combos/elementalist](combos/elementalist/README.md)
+
+A roughly 29-second five-element showcase: magic circle, fireball crown, planted ice,
+sand-silk lattice, chained lightning and delayed bursts, mixed-material tornado,
+convergence and a charged finale. Generic `shape` × (`element` + `mix`) casts use coordinate
+lists, `linger`, `burst` and `swell`; `camera` events frame the charge. These fields are
+also editable in the manual editor. Spoken narration and kinetic titles belong to editing.
 
 Each folder in [combos/](combos) holds the prompt (`prompt.md`), the `combo.json` and
 `style.json` an agent wrote for it, and the scene.
@@ -137,6 +145,14 @@ and a writhing tornado that sweeps the target up — winding up tight before eac
 lashing out on it — and flings it away.
 
 ![Wind](media/wind_blade.gif)
+
+### Sand — [combos/sand_silk](combos/sand_silk)
+
+Magic renderer, sand only — sand silk: shimmering sand-gold motes gather into a very fine
+glittering thread that runs the target through, a volley of three, a storm of dozens of
+fine threads whirling round the target, and nine threads loosed at once.
+
+![Sand](media/sand_silk.gif)
 
 ### Frost swordsman — [combos/frost_swordsman](combos/frost_swordsman)
 

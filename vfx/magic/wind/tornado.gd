@@ -12,9 +12,15 @@ extends "res://vfx/magic/magic_fx.gd"
 ##            bright and the far side dim; leaves and dust spiral up it; a skirt of dust
 ##            churns round its foot; the air bends round it (炸裂 tier)
 ##   burst  — the bands blow outwards and fade, the debris is flung clear.
+## Mixed with other elements it is an elemental tornado: through the charge it sweeps their
+## motes in off the whole field, then carries them whirling up it, a helix of each element
+## winding up between its bands. With `swell` it keeps widening and growing as it holds.
 
 const Art = preload("res://vfx/magic/magic_art.gd")
 const Gusts = preload("res://vfx/magic/wind/gusts.gd")
+const Canvas = preload("res://vfx/magic/canvas.gd")
+## It carries what it is mixed with (vfx/magic_stage.gd keeps it for mixed casts).
+const TAKES_MIX := true
 ## Funnel height and its radius at the top, at size 1, px.
 const HEIGHT := 340.0
 const TOP := 125.0
@@ -31,9 +37,14 @@ var _dust: Node2D
 var _air: Node2D
 var _bands: Array
 var _leaves: Node2D
+var swell := 1.0
+var _size := 1.0
+## What it carries (the mixed elements), drawn on their own canvas.
+var _carried: Canvas
 
 func _ready() -> void:
 	super._ready()
+	_size = size
 	_x = start_point(0).x
 	life = _end() + BURST + 0.6
 	_dust = Art.drawer(false)
@@ -44,6 +55,9 @@ func _ready() -> void:
 	for node in _bands: if node != null: add_child(node)
 	_leaves = Art.drawer(false)
 	add_child(_leaves)
+	if materials.size() > 1:
+		_carried = Canvas.new()
+		add_child(_carried)
 	_update()
 
 func advance(delta: float) -> void:
@@ -78,6 +92,7 @@ func _radius(h: float, height: float, flare: float) -> float:
 
 func _update() -> void:
 	var stop := _end()
+	size = _size * lerpf(1.0, swell, clampf(age / maxf(stop, 0.01), 0.0, 1.0))
 	var force := _force()
 	var tight: float = force[0]
 	var lash: float = force[1]
@@ -105,6 +120,7 @@ func _update() -> void:
 		var body := stage.target.position
 		stage.set("_target_velocity", (want - body) * 5.0)
 	_debris(leaves, dust, height, flare, sway, spin, stop, rise, lash)
+	if _carried != null: _carry(height, flare * (1.0 + 1.5 * blown), sway, spin, stop, rise, power, blown)
 	Gusts.show(_bands, bands, age)
 	for pair in [[_dust, dust], [_air, air], [_leaves, leaves]]:
 		(pair[0] as Art.Drawer).items = pair[1]
@@ -185,3 +201,49 @@ func _debris(leaves: Array, dust: Array, height: float, flare: float, sway: floa
 		var a := spin * 0.6 + TAU * j / 6.0
 		var p := Vector2(_x + cos(a) * 75.0 * size * skirt, GROUND_Y - 14.0 + sin(a) * 6.0)
 		dust.append([smoke, p, Vector2(120.0, 46.0) * size * skirt, rnd2(j) * 0.2, Color(0.5, 0.45, 0.37, (0.25 + 0.2 * lash) * rise * live)])
+
+## What it carries, mixed in: through the charge their motes swept in off the whole field
+## to its foot; then whirling up it, a helix of each element winding up between the bands.
+func _carry(height: float, flare: float, sway: float, spin: float, stop: float, rise: float, power: float, blown: float) -> void:
+	var cv: Canvas = _carried
+	cv.begin(age)
+	var extra := materials.size() - 1
+	var foot := Vector2(_x, GROUND_Y - 20.0)
+	if age < charge * 1.4:
+		var k := clampf(age / maxf(charge * 1.4, 0.01), 0.0, 1.0)
+		for j in roundi(26 * extra * Art.density()):
+			var phase := fposmod(age * 1.1 + rnd(j + 900), 1.0)
+			var from := Vector2(rnd2(j + 901) * 560.0, -rnd(j + 902) * 260.0) * size
+			var p := foot + from * pow(1.0 - phase, 1.4) + Vector2(sin(phase * 9.0 + j) * 20.0, 0)
+			(materials[1 + j % extra] as GDScript).mote(cv, p, 2.4, phase * (1.0 - k * 0.5), j, -from * 2.0)
+	if power > 0.0 and age > charge * 0.5:
+		for e in extra:
+			var m: GDScript = materials[1 + e]
+			var run := PackedVector2Array()
+			var front_run := true
+			for s in 31:
+				var u := float(s) / 30.0
+				var h := height * u
+				var a := spin * 1.1 + u * 2.6 * TAU + TAU * (e + 0.5) / extra
+				var front := sin(a) > 0.0
+				var p := Vector2(_axis(h, height, sway) + cos(a) * _radius(h, height, flare) * 0.9, GROUND_Y - h - 50.0 * blown + sin(a) * _radius(h, height, flare) * 0.22)
+				if s > 0 and front != front_run:
+					run.append(p)
+					m.line(cv, run, 3.5 * size, rise * power * (0.9 if front_run else 0.3), seed_id + e * 13)
+					run = PackedVector2Array([p])
+				else:
+					run.append(p)
+				front_run = front
+			m.line(cv, run, 3.5 * size, rise * power * (0.9 if front_run else 0.3), seed_id + e * 13)
+		for j in roundi(22 * extra * Art.density()):
+			var cycle := 1.0 + 0.6 * rnd(j + 950)
+			var phase := fposmod(age / cycle + rnd(j + 951), 1.0)
+			var h := height * phase
+			var a := spin * (0.9 + 0.3 * rnd(j + 952)) + rnd(j + 953) * TAU
+			var r := _radius(h, height, flare) * (0.6 + 0.5 * rnd(j + 954))
+			var p := Vector2(_axis(h, height, sway) + cos(a) * r, GROUND_Y - h + sin(a) * r * 0.25)
+			if age >= stop:
+				var t := age - stop
+				p += Vector2(cos(a), -0.4) * 420.0 * t + Vector2(0, 500.0 * t * t)
+			(materials[1 + j % extra] as GDScript).mote(cv, p, 2.6, rise * maxf(power, 1.0 - clampf((age - stop) / 0.9, 0.0, 1.0)) * (1.0 if sin(a) > 0.0 else 0.45), j + 960, Vector2(-sin(a), 0) * 300.0)
+	cv.finish()

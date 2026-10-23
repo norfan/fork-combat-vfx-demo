@@ -13,6 +13,14 @@ extends ComboStage
 ## style.json "magic_quality" picks the tier (vfx/magic/magic_art.gd): "retro" 复古,
 ## "balanced" 均衡, "ultimate" 极致 or "explosive" 炸裂 (everything, the default). Q cycles it
 ## while the demo runs.
+## Shape × material: a cast's `shape` is the spell's form — "comet", "beam", "ring",
+## "pillar", "vortex" or "circle" (the shared ones in vfx/magic/shapes/) — and its element
+## (plus any `mix` of more elements) what it is made of. Left out, the shape is "pillar"
+## from below the floor, the element's STAY_SHAPE for path "stay" and its SHAPE otherwise.
+## Where an element has its own version of a shape (fire's comet is the fireball) that is
+## drawn instead — unless the cast is mixed and that version cannot carry a mix.
+## A burst (cast `burst`) plays the impacts of everything the spell is made of where a body
+## ends, and sets off other casts' lingering bodies within its reach.
 const Art = preload("res://vfx/magic/magic_art.gd")
 const QUALITIES := ["retro", "balanced", "ultimate", "explosive"]
 const QUALITY_NAMES := {"retro": "复古", "balanced": "均衡", "ultimate": "极致", "explosive": "炸裂"}
@@ -24,7 +32,20 @@ const ELEMENTS := {
 	"thunder": preload("res://vfx/magic/thunder.gd"),
 	"ice": preload("res://vfx/magic/ice.gd"),
 	"wind": preload("res://vfx/magic/wind.gd"),
+	"sand": preload("res://vfx/magic/sand.gd"),
 }
+const SHAPES := {
+	"comet": preload("res://vfx/magic/shapes/comet.gd"),
+	"beam": preload("res://vfx/magic/shapes/beam.gd"),
+	"ring": preload("res://vfx/magic/shapes/ring.gd"),
+	"pillar": preload("res://vfx/magic/shapes/pillar.gd"),
+	"vortex": preload("res://vfx/magic/shapes/vortex.gd"),
+	"circle": preload("res://vfx/magic/shapes/circle.gd"),
+}
+## Shapes that are one effect per body of a volley (the others stand for the whole cast).
+const PER_BODY := ["comet", "beam"]
+## Fields every cast has, whatever its element.
+const CAST_DEFAULTS := {"shape": "", "mix": [], "linger": 0.0, "burst": false, "swell": 1.0}
 const STARTS := ["hand", "above", "sky", "behind", "self", "below", "target"]
 const ENDS := ["target", "ground", "self"]
 const PATHS := ["straight", "arc", "wave", "spiral", "stay"]
@@ -43,19 +64,42 @@ var real_clock := 0.0
 var target_slow := 1.0
 ## Landings still to be paired with a hit: {time, spec}.
 var _arrivals: Array[Dictionary] = []
+## Every cast's spec by its id (its event index), for its bursts.
+var _casts := {}
+var _bursts := 0
 var quality := "explosive"
 var quality_label: Label
 ## Retro tier: [layer node, its SubViewport, its display] for `under` and `fx`.
 var _layers: Array = []
 
-## A cast's fields with its element's defaults filled in.
+## A cast's fields with its element's defaults filled in. A start or end given as a point
+## or a list becomes "at", the points in `starts` / `ends`.
 static func cast_spec(event: Dictionary) -> Dictionary:
 	var element: GDScript = ELEMENTS.get(String(event.get("element", "fire")), ELEMENTS.fire)
 	var spec: Dictionary = (element.DEFAULTS as Dictionary).duplicate()
+	spec.merge(CAST_DEFAULTS.duplicate(true))
 	for key: String in spec:
 		if event.has(key): spec[key] = event[key]
 	spec.count = maxi(1, int(spec.count))
+	for pair in [["start", "starts"], ["end", "ends"]]:
+		var value: Variant = spec[pair[0]]
+		if value is Array:
+			var list: Array = value
+			# One point [x, y], or a list of points and names.
+			spec[pair[1]] = [list] if not list.is_empty() and not (list[0] is Array or list[0] is String) else list
+			spec[pair[0]] = "at"
+	var mix: Array = []
+	for name: Variant in spec.mix:
+		if ELEMENTS.has(String(name)) and String(name) != String(event.get("element", "fire")) and not mix.has(String(name)): mix.append(String(name))
+	spec.mix = mix
 	return spec
+
+## The shape a cast takes (the shared shape's name; see the header).
+static func shape_of(spec: Dictionary, element: GDScript) -> String:
+	if SHAPES.has(String(spec.shape)): return String(spec.shape)
+	if spec.start == "below": return "pillar"
+	if spec.path == "stay": return String(element.STAY_SHAPE)
+	return String(element.SHAPE)
 
 ## Combo seconds at which a cast's bodies land (the editor uses this too).
 static func contact_times(event: Dictionary) -> Array:
@@ -74,7 +118,7 @@ func _ready() -> void:
 	caption.position = Vector2(70, 100)
 	caption.add_theme_font_size_override("font_size", 32)
 	caption.modulate = ComboStyle.c("text")
-	add_child(caption)
+	overlay.add_child(caption)
 	if not combo_file.is_empty() and FileAccess.file_exists(combo_file):
 		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(combo_file))
 		if parsed is Dictionary: captions = (parsed as Dictionary).get("captions", [])
@@ -82,7 +126,7 @@ func _ready() -> void:
 	quality_label.position = Vector2(1030, 20)
 	quality_label.add_theme_font_size_override("font_size", 20)
 	quality_label.add_theme_color_override("font_color", ComboStyle.c("text"))
-	add_child(quality_label)
+	overlay.add_child(quality_label)
 	set_quality(String(ComboStyle.data.get("magic_quality", "explosive")))
 
 ## Switches the quality tier: the retro tier moves the effect layers into pixel-grain
@@ -146,6 +190,8 @@ func _update_target(delta: float) -> void:
 
 func reset() -> void:
 	_arrivals.clear()
+	_casts.clear()
+	_bursts = 0
 	super.reset()
 	if under != null:
 		for child in under.get_children():
@@ -170,11 +216,36 @@ func _fire(event: Dictionary) -> void:
 		push_warning("cast: unknown element '%s' (known: %s)" % [name, ", ".join(ELEMENTS.keys())])
 		return
 	var spec := cast_spec(event)
-	spec.merge({"stage": self, "element": name, "seed_id": _next * 13 + 5}, true)
+	var element: GDScript = ELEMENTS[name]
+	var materials: Array = [element]
+	for other: String in spec.mix: materials.append(ELEMENTS[other])
+	spec.merge({"stage": self, "element": name, "seed_id": _next * 13 + 5, "cast_id": _next, "materials": materials}, true)
 	spec.size = float(spec.size) * ComboStyle.thickness
-	for part: Node in (ELEMENTS[name] as GDScript).cast(spec): fx.add_child(part)
+	_casts[_next] = spec
+	var shape := shape_of(spec, element)
+	var script: GDScript = (element.SIGNATURES as Dictionary).get(shape)
+	if script == null or (not (spec.mix as Array).is_empty() and not script.get_script_constant_map().has("TAKES_MIX")):
+		script = SHAPES[shape]
+	if shape in PER_BODY:
+		for i in int(spec.count): fx.add_child(script.new().configure(spec.merged({"index": i, "seed_id": int(spec.seed_id) + i * 7}, true)))
+	else:
+		fx.add_child(script.new().configure(spec))
 	for time: float in contact_times(event):
 		_arrivals.append({"time": time, "spec": spec})
+
+## A body of cast `id` ends at `point` with a bang: the impacts of everything it is made of,
+## and other casts' bodies lingering within reach go off too.
+func burst(id: int, point: Vector2, _source: Node) -> void:
+	if not _casts.has(id): return
+	var spec: Dictionary = (_casts[id] as Dictionary).duplicate()
+	_bursts += 1
+	spec.merge({"at": point, "finisher": false, "seed_id": _bursts * 23 + 7}, true)
+	for name: String in [String(spec.element)] + (spec.mix as Array):
+		for part: Node in (ELEMENTS[name] as GDScript).impact(spec): fx.add_child(part)
+	var reach := float(spec.radius) * float(spec.size) + 40.0
+	for other in fx.get_children():
+		if other.get("cast_id") == id or not other.has_method("lingering") or other.is_queued_for_deletion(): continue
+		if other.lingering() and (other.end_point() as Vector2).distance_to(point) <= reach: other.detonate()
 
 func _hit(event: Dictionary) -> void:
 	var best := -1
@@ -198,6 +269,10 @@ func _hit(event: Dictionary) -> void:
 		"self": at = attacker.position + Vector2(0, -4)
 	spec.merge({"finisher": finisher, "seed_id": hits * 17 + 3, "at": at}, true)
 	for part: Node in (ELEMENTS[spec.element] as GDScript).hit(spec):
+		# A bursting cast has played its impact where it ended already.
+		if bool(spec.burst) and part.get("part") == "impact":
+			part.free()
+			continue
 		# One status per element on the target: a new hit restarts it.
 		if part.get("part") == "status":
 			var running: Node = null

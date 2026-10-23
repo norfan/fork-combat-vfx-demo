@@ -22,7 +22,7 @@ vfx/            特效代码：combo_player.gd（场景根节点）、combo_stag
                 ribbon_stage.gd + trajectory_ribbon.gd + trajectory_ribbon.gdshader（轨迹刀光）；
                 claw_stage.gd + claw_rake.gd（爪痕）；magic_stage.gd + magic/（脱手魔法：
                 magic_fx.gd、magic_art.gd、fire.gd + fire/、thunder.gd + thunder/、
-                ice.gd + ice/、wind.gd + wind/、shaders/）；combo_editor.gd（手动精调）
+                ice.gd + ice/、wind.gd + wind/、sand.gd + sand/、shaders/）；combo_editor.gd（手动精调）
 combos/<名字>/  <名字>.tscn、combo.json（事件）、style.json（风格）、prompt.md（提示词）
 styles/         风格预设：default、ember、neon、ink
 tools/          new_combo.py、verify_combo.py、frames_to_gif.py、frames_to_review.py、
@@ -67,7 +67,7 @@ SKILL.md        代理说明
 | 月牙刀光 | 大范围斩击、剑气造型、强调完整轮廓的攻击 | 不写 `renderer`，或设为 `""` |
 | 轨迹刀光 | 贴着武器的挥砍、连续拼刀、旋转斩、需要自然拖尾和收尾的动作 | `"renderer": "ribbon"` |
 | 爪痕 | 兽爪、利爪、撕扯：几道扇形张开的月牙形撕裂爪痕带细拖尾，招式有横斩、突进、交叉斩、直抓、大回环、暴扣，打中会在目标身上留下抓痕 | `"renderer": "claw"` |
-| 魔法 | 脱手技能（`cast` 施法事件），原分辨率 + 着色器：骨架（起点、终点、路径、打击范围）带着本体和跟着本体变化的配饰；目前有火、雷、冰、风 | `"renderer": "magic"` |
+| 魔法 | 脱手技能（`cast` 施法事件），原分辨率 + 着色器：骨架（起点、终点、路径、打击范围）带着本体和跟着本体变化的配饰；目前有火、雷、冰、风、沙 | `"renderer": "magic"` |
 
 使用技能时直接说明选择，例如：
 
@@ -86,6 +86,13 @@ SKILL.md        代理说明
 [事件格式](references/combo_events.md#sampled-trajectory-renderer)。
 
 ## 示例：提示词 → 效果
+
+### 大元素使 · 万象归一 — [combos/elementalist](combos/elementalist/README.md)
+
+约 29 秒的五元素演示：法阵归位、16 火球花冠、冰晶落阵、金沙织阵、雷电连锁引爆、
+混合元素龙卷、万象回流与蓄力终结。用 `shape` 选形状，`element` + `mix` 选材质；
+坐标列表编排起终点，`linger` 留住本体，`burst` 连锁引爆，`swell` 让形状扩大或收缩。
+新增的镜头事件和魔法参数也能在手动精调里修改。砸字、口播与音乐留给剪辑。
 
 ### 火球 · 魔法 — [combos/fire_fireball](combos/fire_fireball)
 
@@ -166,6 +173,22 @@ SKILL.md        代理说明
 - 龙卷的发力写在形状上：每次命中前先收紧、绷直蓄势；命中那一下猛地张开、拔高、转得更快、甩动，脚下炸起一圈尘土，然后慢慢松开。最后一次命中时炸开，把目标甩出去。
 
 ![风](media/wind_blade.gif)
+
+### 沙 · 魔法 — [combos/sand_silk](combos/sand_silk)
+
+依次是：
+- 沙丝；
+- 三连沙丝；
+- 沙暴；
+- 千丝。
+
+- 沙魔法是光，不是沙堆：空气里飘着淡淡的、一闪一闪的沙金色细粒。
+- 施法：细粒从四周被吸过来，汇到起点凝成一个光点，再拉成一根很细的沙丝。沙丝由一颗颗紧挨着、各自闪烁的金色细粒组成，旁边缠着两根更淡的丝。它沿路径射出，贯穿目标，绷直一小会儿后散成细粒飘走。
+- 落点：贯穿处一点亮光，几根金丝向外弹出又收回，一蓬闪烁的金粉散开、悬停、慢慢飘落。
+- 状态：金色细粒附在目标身上慢慢往下落，还缠着一根细丝，目标轻微减速。
+- 沙暴：起点“目标身上”，路径“原地”。几十根很细很密的沙丝绕着目标飞旋，每根高度、倾角、速度都不一样，前亮后淡，中间卷着金粉；每次命中时丝会收紧，最后一次命中时散成金粉。
+
+![沙](media/sand_silk.gif)
 
 ### 变体试验 · 雷盾 / 地火 — [combos/magic_variants](combos/magic_variants)
 

@@ -31,7 +31,8 @@ Screen 1280 × 720, y grows downward, the attacker faces right.
 | attacker (diamond marker) start | (430, 450) — 70 px above the ground |
 | target (block, 44 × 96) start | feet at (575, 520); its centre is ~145 px right of and ~20 px below the attacker |
 
-The camera is fixed; only the screen shake moves it.
+The camera starts at the full-stage view. `camera` events can ease it closer and back;
+the existing screen shake offsets that view.
 
 ## Angles
 
@@ -156,11 +157,22 @@ before each landing it winds up tight and stiff, at the landing it lashes (flare
 taller, spins harder, whips, bursts dust off its foot), and at the last landing it blows
 apart (`wind/tornado.gd`).
 
+For sand (`vfx/magic/sand/`) the magic is light, not heaps: faint sand-gold motes shimmer
+in the air round the caster; at the cast they are drawn in from all round and gather into
+a point of light that draws out into a very fine thread of glittering grains
+(`silk.gdshader`), two fainter threads weaving round it, that shoots out along the path
+and runs the target through, holds taut `hold` s, then comes apart into drifting motes.
+On landing a point of light and fine gold wires flick out of it, and a spray of
+glittering motes hangs and drifts down; motes cling to the target and sift down it,
+slowing it a little. Staying put (`path: stay`, `start: target`) it is a storm of dozens
+of very fine, dense threads whirling round the target, drawing tight at every landing and
+flying apart into motes at the last (`sand/storm.gd`).
+
 `cast` — a spell from the caster:
 
 | Field | Meaning | Default (fire / thunder; ice in `ice.gd`) |
 |---|---|---|
-| `element` | `fire`, `thunder`, `ice` or `wind` | fire |
+| `element` | `fire`, `thunder`, `ice`, `wind` or `sand` | fire |
 | `start` | `hand`; `above` the caster's head; `sky` high over the target; `behind` above and behind the target (it swoops back); `self` the caster's body; `below` under the floor beneath the target | hand |
 | `end` | `target` (its body), `ground` (the floor under it: the blast sits on the floor) or `self` (around the caster: the blast goes off there) | target |
 | `path` | `straight`; `arc` bowed by `arc` px; `wave` snaking `wave` px `turns` times; `spiral` corkscrewing in; `stay`: it stays at its start (riding along with it) for `travel` s and lands there | arc / straight |
@@ -178,7 +190,7 @@ apart (`wind/tornado.gd`).
 (the manual editor's 「对齐命中」 button does it). A hit within 0.09 s of a landing plays the
 element's impact and status instead of the stock star spark; hits that match no landing
 stay melee hits. A `finisher` hit also flares the whole screen.
-`combos/fire_fireball/`, `combos/thunder_bolt/`, `combos/ice_spear/` and `combos/wind_blade/` are complete examples.
+`combos/fire_fireball/`, `combos/thunder_bolt/`, `combos/ice_spear/`, `combos/wind_blade/` and `combos/sand_silk/` are complete examples.
 
 Two skeletons get a body of their own: **thunder with `path: stay`** is a shield of arcs
 around its start (start `self`, end `self`: around the caster, following it; it does no
@@ -193,6 +205,40 @@ resolution, about a third of the particles, smaller halos; for weak machines),
 `"ultimate"` 极致 (no screen-warping accessories — heat haze, shockwave refraction — and
 about half the particles) or `"explosive"` 炸裂 (default: everything above). Q cycles the
 tier while a demo runs.
+
+#### Shape × material composition
+
+`shape` explicitly chooses `comet`, `beam`, `ring`, `pillar`, `vortex` or `circle`.
+When omitted (or empty), the element picks its normal form, its stationary form for
+`path: stay`, or a pillar for `start: below`. `element` supplies the primary material;
+`mix: ["sand", "thunder"]` braids additional materials through the same shape. Existing
+signature forms are retained where compatible; ice remains straight even if the path
+says arc or spiral. A mixed spell's primary material decides this movement rule.
+
+`start` and `end` also accept one `[x,y]` coordinate or a nonempty list of coordinates
+and/or their usual anchor names. Body i cycles through that list. For example,
+`start: [[500,180],[700,120]]`, `end: [[700,120],[850,450]]` composes an ordinary chain
+without a chain-specific renderer. Coordinate endpoints remain fixed; named anchors
+follow their actors. Coordinates refer to the stage before camera zoom.
+
+| Field | Meaning | Default |
+|---|---|---|
+| `linger` | Seconds a projectile stays at its endpoint after landing | 0 |
+| `burst` | Burst at its end, including every mixed material; nearby lingering bodies of other casts detonate early | false |
+| `swell` | Shared shapes / wind tornado: end size multiplier; below 1 contracts, above 1 expands | 1 |
+
+Scenery and coordinate bursts can be composed without `hit` events. Target damage / hit
+counter bookkeeping still requires a paired `hit`; `burst` alone does not count a hit.
+Stationary whole-volley shapes burst once at their final landing. See
+[`combos/elementalist/`](../combos/elementalist/README.md) for the complete showcase.
+
+### `camera` — ease the view
+
+`{"t": 1, "do": "camera", "zoom": 1.6, "at": [460,410], "time": 0.8}`
+zooms closer over 0.8 action seconds, including slow motion and hit-stop. `zoom: 1`
+returns to the full stage. The camera keeps its view inside 1280×720; values below
+1 are clamped to 1. Defaults: `zoom: 1`, `at: [640,360]`, `time: 0.5`.
+Help and captions remain on screen. Reset / replay restores the original view.
 
 ### `move` — the attacker glides
 | Field | Meaning | Default |

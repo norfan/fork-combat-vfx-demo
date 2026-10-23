@@ -5,7 +5,7 @@ extends Node2D
 ## in the look of `style_file`, on loop. In the editor it shows the stage at rest.
 ##
 ## Run flags (after `--`): --verify (headless self-test), --capture=FILE [--capture-at=S]
-## (one screenshot, then quit), --frames=DIR [--duration=S] (every frame, then quit).
+## (one screenshot, then quit; several times S,S,… save FILE_S.png each), --frames=DIR [--duration=S] (every frame, then quit).
 
 @export_file("*.json") var combo_file := "":
 	set(value):
@@ -28,6 +28,9 @@ var shake_duration := 0.0
 var shake_strength := 0.0
 var capture_path := ""
 var capture_at := 0.5
+## Seconds still to capture at, with --capture-at=S,S,…
+var capture_times: Array[float] = []
+var _many_captures := false
 var frames_dir := ""
 var frames_duration := 4.0
 var _frame_index := 0
@@ -41,7 +44,10 @@ var _overlay: CanvasLayer
 func _ready() -> void:
 	for arg in OS.get_cmdline_user_args():
 		if arg.begins_with("--capture="): capture_path = arg.trim_prefix("--capture=")
-		elif arg.begins_with("--capture-at="): capture_at = float(arg.trim_prefix("--capture-at="))
+		elif arg.begins_with("--capture-at="):
+			for part in arg.trim_prefix("--capture-at=").split(","): capture_times.append(float(part))
+			capture_at = capture_times[0]
+			_many_captures = capture_times.size() > 1
 		elif arg == "--verify": verify = true
 		elif arg.begins_with("--frames="): frames_dir = arg.trim_prefix("--frames=")
 		elif arg.begins_with("--duration="): frames_duration = float(arg.trim_prefix("--duration="))
@@ -113,7 +119,7 @@ func _process(delta: float) -> void:
 		_capture()
 	if verify:
 		verify_age += delta
-		if verify_age > 30.0:
+		if verify_age > 30.0 + demo.clock_end():
 			push_error("Combo did not settle")
 			get_tree().quit(1)
 		elif demo.is_settled():
@@ -146,6 +152,14 @@ func _save_frame() -> void:
 
 func _capture() -> void:
 	await RenderingServer.frame_post_draw
-	var error := get_viewport().get_texture().get_image().save_png(capture_path)
+	var path := capture_path
+	if _many_captures:
+		path = capture_path.get_basename() + "_%.2f.png" % capture_at
+	var error := get_viewport().get_texture().get_image().save_png(path)
 	if error != OK: push_error("Capture failed: %s" % error)
+	if capture_times.size() > 1 and error == OK:
+		capture_times.pop_front()
+		capture_at = capture_times[0]
+		capturing = false
+		return
 	get_tree().quit(0 if error == OK else 1)

@@ -37,7 +37,7 @@ func _ready() -> void:
 	caption.position = Vector2(70, 100)
 	caption.add_theme_font_size_override("font_size", 32)
 	caption.modulate = ComboStyle.c("text")
-	add_child(caption)
+	overlay.add_child(caption)
 	if not combo_file.is_empty() and FileAccess.file_exists(combo_file):
 		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(combo_file))
 		if parsed is Dictionary: captions = (parsed as Dictionary).get("captions", [])

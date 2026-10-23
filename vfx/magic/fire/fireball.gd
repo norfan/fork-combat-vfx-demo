@@ -32,7 +32,7 @@ var _sparks: Node2D
 
 func _ready() -> void:
 	super._ready()
-	life = land(index) + SMOKE_LIFE
+	life = gone(index) + SMOKE_LIFE
 	_smoke = Art.drawer(false)
 	add_child(_smoke)
 	_copy = Art.backbuffer()
@@ -90,10 +90,11 @@ func _update() -> void:
 		flying = true
 		_launch_burst(sparks, smoke)
 	else:
-		pos = path_at(index, 1.0)
+		# Lingering: it hangs at its end, bobbing, burning on.
+		pos = path_at(index, 1.0) + Vector2(0, sin(age * 3.0 + index) * 4.0 * size)
 		_launch_burst(sparks, smoke)
 	var stretch := 1.0 + clampf(speed / 1100.0, 0.0, 1.6)
-	var alive := age >= t0 and age < t2
+	var alive := age >= t0 and age < gone(index)
 	# The body.
 	_body.visible = alive
 	if alive:
@@ -115,7 +116,8 @@ func _update() -> void:
 	Art.spread_light(_ground, Vector2(pos.x, GROUND_Y + 2.0), Vector2(r * 14.0, r * 2.6) * (0.6 + 0.5 * low) * grow,
 		Color(1.0, 0.45, 0.12, 0.6 * low * heat) if alive else Color(0, 0, 0, 0))
 	# Warped air around it while it gathers, streaming out behind it in flight.
-	_haze.visible = alive and Art.full()
+	# A swarm (more than a handful at once) skips the warped air.
+	_haze.visible = alive and Art.full() and count <= 6
 	if _haze.visible:
 		var length := r * (3.0 + 5.0 * (stretch - 1.0)) * grow
 		_copy.rect = Rect2(pos - Vector2.ONE * (length + r * 3.0), Vector2.ONE * (length + r * 3.0) * 2.0)
