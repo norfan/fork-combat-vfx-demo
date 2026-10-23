@@ -1,0 +1,19 @@
+{
+  "title": "风 · 魔法绘制器",
+  "language": "zh",
+  "renderer": "magic",
+  "thickness": 1.0,
+  "pixel": 3,
+  "colors": {
+    "background": "121a17",
+    "ground": "4a5a48",
+    "outline": "050806",
+    "dummy": "56636e",
+    "dummy_band": "2c353d",
+    "flash": "ffffff",
+    "blade": "e6fff2",
+    "marker_core": "9ff0c8",
+    "text": "e6fff2",
+    "text_gold": "ffe98a"
+  }
+}

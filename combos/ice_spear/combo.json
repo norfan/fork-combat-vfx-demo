@@ -1,0 +1,281 @@
+{
+  "name": "冰 · 魔法绘制器",
+  "captions": [
+    [
+      0.0,
+      "一 · 冰锥（打中冻住，推不动）"
+    ],
+    [
+      1.15,
+      "二 · 三连冰锥"
+    ],
+    [
+      2.45,
+      "三 · 暴雨梨花"
+    ],
+    [
+      4.55,
+      "四 · 寒霜结界（减速：被打飞也慢）"
+    ],
+    [
+      7.3,
+      "结界碎裂"
+    ]
+  ],
+  "events": [
+    {
+      "t": 0.1,
+      "do": "cast",
+      "element": "ice"
+    },
+    {
+      "t": 0.67,
+      "do": "hit",
+      "push": 80,
+      "stop": 0.06,
+      "shake": 4
+    },
+    {
+      "t": 1.2,
+      "do": "cast",
+      "element": "ice",
+      "count": 3,
+      "spread": 50
+    },
+    {
+      "t": 1.77,
+      "do": "hit",
+      "push": 40,
+      "stop": 0.05,
+      "shake": 3
+    },
+    {
+      "t": 1.86,
+      "do": "hit",
+      "push": 40,
+      "stop": 0.05,
+      "shake": 3
+    },
+    {
+      "t": 1.95,
+      "do": "hit",
+      "push": 40,
+      "stop": 0.05,
+      "shake": 3
+    },
+    {
+      "t": 2.5,
+      "do": "cast",
+      "element": "ice",
+      "start": "self",
+      "count": 24,
+      "interval": 0.025,
+      "charge": 0.7,
+      "travel": 0.2,
+      "size": 0.55,
+      "spread": 55,
+      "radius": 24
+    },
+    {
+      "t": 3.4,
+      "do": "hit",
+      "push": 6,
+      "stop": 0.012,
+      "shake": 1.2
+    },
+    {
+      "t": 3.425,
+      "do": "hit",
+      "push": 6,
+      "stop": 0.012,
+      "shake": 1.2
+    },
+    {
+      "t": 3.45,
+      "do": "hit",
+      "push": 6,
+      "stop": 0.012,
+      "shake": 1.2
+    },
+    {
+      "t": 3.475,
+      "do": "hit",
+      "push": 6,
+      "stop": 0.012,
+      "shake": 1.2
+    },
+    {
+      "t": 3.5,
+      "do": "hit",
+      "push": 6,
+      "stop": 0.012,
+      "shake": 1.2
+    },
+    {
+      "t": 3.525,
+      "do": "hit",
+      "push": 6,
+      "stop": 0.012,
+      "shake": 1.2
+    },
+    {
+      "t": 3.55,
+      "do": "hit",
+      "push": 6,
+      "stop": 0.012,
+      "shake": 1.2
+    },
+    {
+      "t": 3.575,
+      "do": "hit",
+      "push": 6,
+      "stop": 0.012,
+      "shake": 1.2
+    },
+    {
+      "t": 3.6,
+      "do": "hit",
+      "push": 6,
+      "stop": 0.012,
+      "shake": 1.2
+    },
+    {
+      "t": 3.625,
+      "do": "hit",
+      "push": 6,
+      "stop": 0.012,
+      "shake": 1.2
+    },
+    {
+      "t": 3.65,
+      "do": "hit",
+      "push": 6,
+      "stop": 0.012,
+      "shake": 1.2
+    },
+    {
+      "t": 3.675,
+      "do": "hit",
+      "push": 6,
+      "stop": 0.012,
+      "shake": 1.2
+    },
+    {
+      "t": 3.7,
+      "do": "hit",
+      "push": 6,
+      "stop": 0.012,
+      "shake": 1.2
+    },
+    {
+      "t": 3.725,
+      "do": "hit",
+      "push": 6,
+      "stop": 0.012,
+      "shake": 1.2
+    },
+    {
+      "t": 3.75,
+      "do": "hit",
+      "push": 6,
+      "stop": 0.012,
+      "shake": 1.2
+    },
+    {
+      "t": 3.775,
+      "do": "hit",
+      "push": 6,
+      "stop": 0.012,
+      "shake": 1.2
+    },
+    {
+      "t": 3.8,
+      "do": "hit",
+      "push": 6,
+      "stop": 0.012,
+      "shake": 1.2
+    },
+    {
+      "t": 3.825,
+      "do": "hit",
+      "push": 6,
+      "stop": 0.012,
+      "shake": 1.2
+    },
+    {
+      "t": 3.85,
+      "do": "hit",
+      "push": 6,
+      "stop": 0.012,
+      "shake": 1.2
+    },
+    {
+      "t": 3.875,
+      "do": "hit",
+      "push": 6,
+      "stop": 0.012,
+      "shake": 1.2
+    },
+    {
+      "t": 3.9,
+      "do": "hit",
+      "push": 6,
+      "stop": 0.012,
+      "shake": 1.2
+    },
+    {
+      "t": 3.925,
+      "do": "hit",
+      "push": 6,
+      "stop": 0.012,
+      "shake": 1.2
+    },
+    {
+      "t": 3.95,
+      "do": "hit",
+      "push": 6,
+      "stop": 0.012,
+      "shake": 1.2
+    },
+    {
+      "t": 3.975,
+      "do": "hit",
+      "push": 120,
+      "stop": 0.08,
+      "shake": 6
+    },
+    {
+      "t": 4.6,
+      "do": "cast",
+      "element": "ice",
+      "start": "target",
+      "path": "stay",
+      "charge": 0.45,
+      "travel": 2.3,
+      "radius": 80
+    },
+    {
+      "t": 5.2,
+      "do": "cast",
+      "element": "ice",
+      "size": 1.2
+    },
+    {
+      "t": 5.77,
+      "do": "hit",
+      "push": 420,
+      "stop": 0.07,
+      "shake": 6,
+      "launch": -620
+    },
+    {
+      "t": 7.35,
+      "do": "hit",
+      "push": 220,
+      "stop": 0.13,
+      "shake": 10,
+      "launch": -380,
+      "finisher": true
+    }
+  ]
+}

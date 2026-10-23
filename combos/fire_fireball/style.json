@@ -1,0 +1,19 @@
+{
+  "title": "火球 · 魔法绘制器",
+  "language": "zh",
+  "renderer": "magic",
+  "thickness": 1.0,
+  "pixel": 3,
+  "colors": {
+    "background": "17110f",
+    "ground": "4e3a30",
+    "outline": "080403",
+    "dummy": "56636e",
+    "dummy_band": "2c353d",
+    "flash": "fffbe6",
+    "blade": "ffdf5c",
+    "marker_core": "ff9426",
+    "text": "ffe8d6",
+    "text_gold": "ffdf5c"
+  }
+}

@@ -1,0 +1,136 @@
+{
+  "name": "闪电 · 魔法绘制器",
+  "captions": [
+    [
+      0.0,
+      "一 · 掌心雷"
+    ],
+    [
+      0.95,
+      "二 · 三连弧雷"
+    ],
+    [
+      2.15,
+      "三 · 蛇行雷"
+    ],
+    [
+      3.15,
+      "四 · 头顶落雷 ×2"
+    ],
+    [
+      4.45,
+      "五 · 天罚"
+    ]
+  ],
+  "events": [
+    {
+      "t": 0.1,
+      "do": "cast",
+      "element": "thunder"
+    },
+    {
+      "t": 0.48,
+      "do": "hit",
+      "push": 70,
+      "stop": 0.07,
+      "shake": 5
+    },
+    {
+      "t": 1.0,
+      "do": "cast",
+      "element": "thunder",
+      "path": "arc",
+      "arc": 70,
+      "count": 3,
+      "spread": 60,
+      "charge": 0.25
+    },
+    {
+      "t": 1.33,
+      "do": "hit",
+      "push": 35,
+      "stop": 0.05,
+      "shake": 4
+    },
+    {
+      "t": 1.47,
+      "do": "hit",
+      "push": 35,
+      "stop": 0.05,
+      "shake": 4
+    },
+    {
+      "t": 1.61,
+      "do": "hit",
+      "push": 35,
+      "stop": 0.05,
+      "shake": 4
+    },
+    {
+      "t": 2.2,
+      "do": "cast",
+      "element": "thunder",
+      "path": "wave",
+      "wave": 45,
+      "turns": 2.5,
+      "travel": 0.12,
+      "size": 1.2
+    },
+    {
+      "t": 2.62,
+      "do": "hit",
+      "push": 80,
+      "stop": 0.07,
+      "shake": 5
+    },
+    {
+      "t": 3.2,
+      "do": "cast",
+      "element": "thunder",
+      "start": "above",
+      "path": "arc",
+      "arc": -60,
+      "count": 2,
+      "interval": 0.18,
+      "charge": 0.35,
+      "hold": 0.3
+    },
+    {
+      "t": 3.63,
+      "do": "hit",
+      "push": 50,
+      "stop": 0.06,
+      "shake": 5
+    },
+    {
+      "t": 3.81,
+      "do": "hit",
+      "push": 50,
+      "stop": 0.06,
+      "shake": 5
+    },
+    {
+      "t": 4.5,
+      "do": "cast",
+      "element": "thunder",
+      "start": "sky",
+      "end": "ground",
+      "path": "straight",
+      "charge": 0.65,
+      "travel": 0.12,
+      "size": 2.0,
+      "radius": 130,
+      "hold": 0.38,
+      "jag": 0.32
+    },
+    {
+      "t": 5.27,
+      "do": "hit",
+      "push": 140,
+      "launch": -620,
+      "stop": 0.14,
+      "shake": 13,
+      "finisher": true
+    }
+  ]
+}

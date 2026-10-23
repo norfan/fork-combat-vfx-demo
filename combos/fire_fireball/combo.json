@@ -1,0 +1,126 @@
+{
+  "name": "火球 · 魔法绘制器",
+  "captions": [
+    [
+      0.0,
+      "一 · 火球"
+    ],
+    [
+      0.95,
+      "二 · 三连扇形火球"
+    ],
+    [
+      2.05,
+      "三 · 蛇行火球"
+    ],
+    [
+      3.15,
+      "四 · 螺旋火球"
+    ],
+    [
+      4.45,
+      "五 · 天降巨型火球"
+    ]
+  ],
+  "events": [
+    {
+      "t": 0.1,
+      "do": "cast",
+      "element": "fire"
+    },
+    {
+      "t": 0.68,
+      "do": "hit",
+      "push": 90,
+      "stop": 0.06,
+      "shake": 4
+    },
+    {
+      "t": 1.0,
+      "do": "cast",
+      "element": "fire",
+      "count": 3,
+      "interval": 0.1,
+      "spread": 55,
+      "arc": 100
+    },
+    {
+      "t": 1.58,
+      "do": "hit",
+      "push": 40,
+      "stop": 0.04,
+      "shake": 3
+    },
+    {
+      "t": 1.68,
+      "do": "hit",
+      "push": 40,
+      "stop": 0.04,
+      "shake": 3
+    },
+    {
+      "t": 1.78,
+      "do": "hit",
+      "push": 40,
+      "stop": 0.04,
+      "shake": 3
+    },
+    {
+      "t": 2.1,
+      "do": "cast",
+      "element": "fire",
+      "path": "wave",
+      "wave": 55,
+      "turns": 1.5,
+      "ease": 1.0,
+      "travel": 0.55
+    },
+    {
+      "t": 2.87,
+      "do": "hit",
+      "push": 80,
+      "stop": 0.06,
+      "shake": 4
+    },
+    {
+      "t": 3.2,
+      "do": "cast",
+      "element": "fire",
+      "path": "spiral",
+      "wave": 70,
+      "turns": 2.5,
+      "travel": 0.6,
+      "ease": 1.1,
+      "size": 1.2
+    },
+    {
+      "t": 4.02,
+      "do": "hit",
+      "push": 100,
+      "stop": 0.07,
+      "shake": 5
+    },
+    {
+      "t": 4.5,
+      "do": "cast",
+      "element": "fire",
+      "start": "sky",
+      "end": "ground",
+      "path": "straight",
+      "ease": 1.8,
+      "charge": 0.5,
+      "travel": 0.5,
+      "size": 2.3,
+      "radius": 150
+    },
+    {
+      "t": 5.5,
+      "do": "hit",
+      "push": 160,
+      "launch": -650,
+      "stop": 0.14,
+      "shake": 12,
+      "finisher": true
+    }
+  ]
+}

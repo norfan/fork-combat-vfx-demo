@@ -21,7 +21,9 @@ vfx/            the effect code: combo_player.gd (scene root), combo_stage.gd (t
                 the stock pixel renderer), pixel_slash.gd (pixel smears), combo_style.gd
                 (colours), gallery.gd; ink_stage.gd + ink_stroke.gd (the ink renderer);
                 ribbon_stage.gd + trajectory_ribbon.gd + trajectory_ribbon.gdshader (blade ribbons);
-                claw_stage.gd + claw_rake.gd (claw marks); combo_editor.gd (the hand-tuning editor)
+                claw_stage.gd + claw_rake.gd (claw marks); magic_stage.gd + magic/ (off-hand
+                magic: magic_fx.gd, magic_art.gd, fire.gd + fire/, thunder.gd + thunder/,
+                ice.gd + ice/, wind.gd + wind/, shaders/); combo_editor.gd (the hand-tuning editor)
 combos/<name>/  <name>.tscn, combo.json (the events), style.json (the look), prompt.md
 styles/         style presets: default, ember, neon, ink
 tools/          new_combo.py, verify_combo.py, frames_to_gif.py, frames_to_review.py,
@@ -58,6 +60,7 @@ the move's name alone does not decide the renderer.
 | Crescent | Broad cuts, sword-energy shapes, attacks with a strong complete silhouette | Omit `renderer`, or set it to `""` |
 | Blade ribbon | Weapon-following swings, consecutive clashes, spins, natural trailing and recovery | `"renderer": "ribbon"` |
 | Claw marks | Claws and rending: fanned crescent gashes with thin trails — horizontal swipes, dashes, cross slashes, rakes, big loops and slams — that scratch the target on every hit (see `combos/claw_cyclone`) | `"renderer": "claw"` |
+| Magic | Off-hand spells (`cast` events) at full resolution with shaders: a skeleton (start, end, path, blast radius) carrying a body and accessories that follow it — fire, thunder, ice and wind, see `combos/fire_fireball`, `combos/thunder_bolt`, `combos/ice_spear` | `"renderer": "magic"` |
 
 Specify your choice in the skill prompt, for example:
 
@@ -99,6 +102,41 @@ Old trajectory samples narrow, darken and disappear; UVs supply the colour bands
 > finish. Rhythm: slow, fast fast, medium, heavy. Fire colours, bold blades.
 
 ![Ember launcher](media/ember_launcher.gif)
+
+### Fireball — [combos/fire_fireball](combos/fire_fireball)
+
+Magic renderer, fire only: one fireball, a fanned volley of three, a snaking one, a
+corkscrewing one, and a giant fireball that gathers high in the sky and falls into a
+ground blast that launches the target. `style.json` `"magic_quality"`: `"retro"` (pixel
+art), `"balanced"` (light), `"ultimate"` (no screen warping) or `"explosive"` (everything,
+the default); Q cycles it while the demo runs.
+
+![Fireball](media/fire_fireball.gif)
+
+### Lightning — [combos/thunder_bolt](combos/thunder_bolt)
+
+Magic renderer, thunder only: a palm bolt, a volley of three arcing bolts, a snaking bolt,
+two bolts dropped from above the caster's head, and a judgement strike out of a storm cloud
+that burns a Lichtenberg scar into the floor and launches the target.
+
+![Lightning](media/thunder_bolt.gif)
+
+### Ice — [combos/ice_spear](combos/ice_spear)
+
+Magic renderer, ice only — clear rolling crystals that never curve: an ice spear that
+freezes the target, a volley of three, 暴雨梨花 (two dozen needles hanging behind the
+caster, then loosed one after another), and a frost ring that follows the target, pours
+cold mist and slows it (its launch floats up and down slowly) before bursting.
+
+![Ice](media/ice_spear.gif)
+
+### Wind — [combos/wind_blade](combos/wind_blade)
+
+Magic renderer, wind only: a curving white puff of air, a volley of three, a snaking one,
+and a writhing tornado that sweeps the target up — winding up tight before each blow and
+lashing out on it — and flings it away.
+
+![Wind](media/wind_blade.gif)
 
 ### Frost swordsman — [combos/frost_swordsman](combos/frost_swordsman)
 

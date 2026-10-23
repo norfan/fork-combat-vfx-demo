@@ -10,17 +10,27 @@ extends Control
 
 const COMBOS := "res://combos"
 const GALLERY := "res://main.tscn"
-const RENDERERS := ["", "ribbon", "claw", "ink"]
-const RENDERER_NAMES := ["月牙（默认）", "轨迹刀光", "爪痕", "水墨"]
-const DOS := ["slash", "hit", "move", "charge", "flash_step", "cut"]
-const DO_NAMES := {"slash": "斩击", "hit": "命中", "move": "位移", "charge": "蓄力", "flash_step": "一闪", "cut": "刀痕"}
-const DO_COLOURS := {"slash": Color("6fd6e8"), "hit": Color("ff6a6a"), "move": Color("9aa7b4"), "charge": Color("ffd166"), "flash_step": Color("c99bff"), "cut": Color("ffa14d")}
+const RENDERERS := ["", "ribbon", "claw", "ink", "magic"]
+const RENDERER_NAMES := ["月牙（默认）", "轨迹刀光", "爪痕", "水墨", "魔法"]
+const DOS := ["slash", "hit", "move", "charge", "flash_step", "cut", "cast"]
+const DO_NAMES := {"slash": "斩击", "hit": "命中", "move": "位移", "charge": "蓄力", "flash_step": "一闪", "cut": "刀痕", "cast": "施法"}
+const DO_COLOURS := {"slash": Color("6fd6e8"), "hit": Color("ff6a6a"), "move": Color("9aa7b4"), "charge": Color("ffd166"), "flash_step": Color("c99bff"), "cut": Color("ffa14d"), "cast": Color("7dffb0")}
+const MAGIC_STAGE := "res://vfx/magic_stage.gd"
+const ELEMENTS := ["fire", "thunder", "ice", "wind"]
+const ELEMENT_NAMES := ["火", "雷", "冰", "风"]
+## A cast's skeleton choices (vfx/magic/magic_fx.gd) and their names.
+const CAST_OPTIONS := {
+	"start": [["hand", "above", "sky", "behind", "self", "below", "target"], ["手上", "头顶", "高空", "目标后上方", "自身", "目标脚下地底", "目标身上"]],
+	"end": [["target", "ground", "self"], ["目标身上", "目标脚下地面", "自身周围"]],
+	"path": [["straight", "arc", "wave", "spiral", "stay"], ["直线", "弧线", "蛇行", "螺旋", "原地（跟着起点）"]],
+}
 const PALETTES := ["normal", "violet", "red", "gold", "green"]
 const CLAW_KINDS := ["arc", "swipe", "dash", "cross", "rake", "slam"]
 const CLAW_NAMES := ["弧 / 回环", "横斩", "突进", "交叉斩", "直抓", "暴扣"]
 ## [key, label, min, max, step, default, shown for]. Shown for: "" always, "stock" only the
 ## default crescents, "timed" the ribbon and claw renderers, "claw" only claws, "k:a|b" only
-## those claw kinds.
+## those claw kinds, "cast" every cast (left out, a cast field takes its element's default),
+## "f:a|b" only casts on those paths, "e:a|b" only casts of those elements.
 const FIELDS := {
 	"slash": [["t", "时间", 0, 20, 0.005, 0.0, ""], ["from", "起始角", -1080, 1080, 1, -70, ""], ["to", "结束角", -1080, 1080, 1, 70, ""],
 		["width", "宽度", 2, 240, 1, 44, ""], ["radius", "半径", 20, 600, 1, 140, "stock"], ["squash", "扁度", 0.05, 2, 0.01, 1.0, ""],
@@ -41,6 +51,14 @@ const FIELDS := {
 	"charge": [["t", "时间", 0, 20, 0.005, 0.0, ""]],
 	"flash_step": [["t", "时间", 0, 20, 0.005, 0.0, ""], ["past", "穿过距离", 0, 600, 1, 140, ""]],
 	"cut": [["t", "时间", 0, 20, 0.005, 0.0, ""], ["angle", "角度", -180, 180, 1, 0, ""], ["palette", "颜色", 0, 0, 0, "normal", ""]],
+	"cast": [["t", "时间", 0, 20, 0.005, 0.0, ""], ["element", "元素", 0, 0, 0, "fire", ""],
+		["start", "起点", 0, 0, 0, "hand", "cast"], ["end", "终点", 0, 0, 0, "target", "cast"], ["path", "路径", 0, 0, 0, "arc", "cast"],
+		["arc", "弧度", -400, 400, 1, 70, "f:arc"], ["wave", "摆幅", 0, 300, 1, 40, "f:wave|spiral"], ["turns", "圈数 / 摆动次数", 0.5, 8, 0.1, 2, "f:wave|spiral"],
+		["ease", "速度曲线（>1 越飞越快）", 0.3, 4, 0.05, 1.25, "cast"], ["charge", "凝聚时间", 0, 2, 0.005, 0.22, "cast"],
+		["travel", "飞行时间（原地：维持多久）", 0.02, 5, 0.005, 0.36, "cast"], ["count", "数量", 1, 12, 1, 1, "cast"],
+		["interval", "间隔", 0, 1, 0.005, 0.12, "cast"], ["spread", "散开", -400, 400, 1, 36, "cast"],
+		["radius", "打击范围", 10, 400, 1, 70, "cast"], ["size", "本体大小", 0.3, 4, 0.05, 1.0, "cast"],
+		["hold", "持续（雷：劈中后闪多久；火柱：最后一击后烧多久）", 0, 3, 0.005, 0.22, "cast"], ["jag", "折角（锯齿感）", 0, 0.8, 0.01, 0.28, "e:thunder"]],
 }
 
 class Host extends Node2D:
@@ -90,6 +108,11 @@ class Strip extends Control:
 			var colour: Color = DO_COLOURS.get(String(e.do), Color.WHITE)
 			if String(e.do) == "slash" and e.has("duration"):
 				draw_rect(Rect2(at - Vector2(0, 3), Vector2(_x(float(e.t) + float(e.duration)) - at.x, 6)), colour * Color(1, 1, 1, 0.35))
+			if String(e.do) == "cast":
+				# A bar to the last landing, a tick at each.
+				var landings: Array = load(MAGIC_STAGE).contact_times(e)
+				draw_rect(Rect2(at - Vector2(0, 2), Vector2(_x(float(landings[-1])) - at.x, 4)), colour * Color(1, 1, 1, 0.35))
+				for landing: float in landings: draw_line(Vector2(_x(landing), at.y - 6), Vector2(_x(landing), at.y + 6), colour, 1.5)
 			draw_circle(at, 6.0 if i == editor.selected else 4.0, colour)
 			if i == editor.selected: draw_arc(at, 9.0, 0, TAU, 20, Color.WHITE, 1.5)
 		if editor.stage != null:
@@ -364,12 +387,14 @@ func _add_event() -> void:
 	var e := {"t": 0.0, "do": kind}
 	if selected >= 0: e.t = snappedf(float(data.events[selected].get("t", 0.0)) + 0.1, 0.005)
 	for field: Array in FIELDS[kind]:
-		if field[0] == "t" or field[6] in ["claw", "optional", "bool", "timed", "stock"] or String(field[6]).begins_with("k:"): continue
+		if field[0] == "t" or field[6] in ["claw", "optional", "bool", "timed", "stock", "cast"] or String(field[6]).substr(0, 2) in ["k:", "f:", "e:"]: continue
 		if field[0] == "by_x": e["by"] = [20, 0]
 		elif field[0] != "by_y": e[field[0]] = field[5]
 	if kind == "slash" and _renderer() in ["ribbon", "claw"]: e.merge({"duration": 0.16, "tail": 0.2})
 	if kind == "slash" and _renderer() == "claw": e["claw"] = "arc"
 	if kind == "slash" and _renderer() in ["", "ink"]: e["radius"] = 160
+	if kind == "cast": e["element"] = "fire"
+	if kind == "cast" and _renderer() != "magic": _status.text = "施法只在「魔法」绘制器里显示：在左边风格里把绘制器换成「魔法」"
 	(data.events as Array).append(e)
 	selected = data.events.size() - 1
 	_changed()
@@ -440,8 +465,12 @@ func _set_captions(text: String) -> void:
 	else: data["captions"] = captions
 	_changed()
 
-## Moves the nearest later hit so it lands when this slash's blade crosses the target.
+## Moves the nearest later hit so it lands when this slash's blade crosses the target; for a
+## cast, the next hits (one per projectile / pulse, added if missing) onto its landings.
 func _align_hit() -> void:
+	if selected >= 0 and String(data.events[selected].do) == "cast":
+		_align_cast_hits()
+		return
 	if selected < 0 or String(data.events[selected].do) != "slash": return
 	var slash: Dictionary = data.events[selected]
 	var target_t := _contact_time(slash)
@@ -457,6 +486,30 @@ func _align_hit() -> void:
 	data.events[best]["t"] = snappedf(target_t, 0.001)
 	_status.text = "命中已对齐到 %.3fs" % target_t
 	_changed()
+
+func _align_cast_hits() -> void:
+	var cast: Dictionary = data.events[selected]
+	var times: Array = load(MAGIC_STAGE).contact_times(cast)
+	# This cast's hits: those after it and before the next attack (cast or slash).
+	var until := INF
+	for e: Dictionary in data.events:
+		if String(e.do) in ["cast", "slash"] and float(e.t) > float(cast.t) + 0.0001: until = minf(until, float(e.t))
+	var later := []
+	for i in data.events.size():
+		var e: Dictionary = data.events[i]
+		if String(e.do) == "hit" and float(e.t) >= float(cast.t) - 0.001 and float(e.t) < until: later.append(i)
+	later.sort_custom(func(a: int, b: int) -> bool: return float(data.events[a].t) < float(data.events[b].t))
+	_remember("align")
+	for n in times.size():
+		if n < later.size(): data.events[later[n]]["t"] = snappedf(float(times[n]), 0.001)
+		else: (data.events as Array).append({"t": snappedf(float(times[n]), 0.001), "do": "hit", "push": 40, "stop": 0.04, "shake": 2.5})
+	_status.text = "%d 次命中已对齐到落点" % times.size()
+	_changed()
+	_refresh_list()
+
+## A cast field's value: as set, else its element's default.
+func _cast_value(e: Dictionary, key: String, fallback: float) -> float:
+	return float((load(MAGIC_STAGE).cast_spec(e) as Dictionary).get(key, fallback))
 
 func _contact_time(slash: Dictionary) -> float:
 	match _renderer():
@@ -497,6 +550,15 @@ func _summary(e: Dictionary) -> String:
 			return "(%.0f, %.0f) %.2fs" % [float(by[0]), float(by[1]), float(e.get("time", 0.08))]
 		"flash_step": return "穿过 %.0f" % float(e.get("past", 140))
 		"cut": return "角度 %.0f" % float(e.get("angle", 0))
+		"cast":
+			var spec: Dictionary = load(MAGIC_STAGE).cast_spec(e)
+			var element: String = ELEMENT_NAMES[maxi(0, ELEMENTS.find(String(e.get("element", "fire"))))]
+			var route := PackedStringArray()
+			for key: String in ["start", "path", "end"]:
+				var options: Array = CAST_OPTIONS[key]
+				route.append(String(options[1][maxi(0, (options[0] as Array).find(String(spec[key])))]))
+			var landing: Array = load(MAGIC_STAGE).contact_times(e)
+			return "%s %s ×%d  落点 %.2fs" % [element, "→".join(route), landing.size(), float(landing[0])]
 	return ""
 
 func _refresh_list() -> void:
@@ -547,7 +609,14 @@ func _refresh_style() -> void:
 	title.text = String(style.get("title", ""))
 	title.text_changed.connect(func(text: String) -> void: _set_style("title", text))
 	_row(_style_box, "标题", title)
-	_row(_style_box, "绘制器", _options(RENDERER_NAMES, RENDERERS.find(_renderer()), func(i: int) -> void: _set_style("renderer", RENDERERS[i])))
+	_row(_style_box, "绘制器", _options(RENDERER_NAMES, RENDERERS.find(_renderer()), func(i: int) -> void:
+		_set_style("renderer", RENDERERS[i])
+		_refresh_style.call_deferred()))
+	if _renderer() == "magic":
+		var tiers := ["retro", "balanced", "ultimate", "explosive"]
+		var current := tiers.find(String(style.get("magic_quality", "explosive")))
+		if current < 0: current = 3
+		_row(_style_box, "魔法画质", _options(["复古", "均衡", "极致", "炸裂"], current, func(i: int) -> void: _set_style("magic_quality", tiers[i])))
 	_row(_style_box, "粗细", _spin(0.2, 3.0, 0.05, float(style.get("thickness", 1.0)), func(v: float) -> void: _set_style("thickness", v)))
 	_row(_style_box, "像素颗粒", _spin(1, 8, 1, float(style.get("pixel", 3)), func(v: float) -> void: _set_style("pixel", int(v))))
 	var captions := TextEdit.new()
@@ -580,11 +649,22 @@ func _refresh_inspector() -> void:
 		if shown == "timed" and not renderer in ["ribbon", "claw"]: continue
 		if shown == "claw" and renderer != "claw": continue
 		if shown.begins_with("k:") and (renderer != "claw" or not String(e.get("claw", "arc")) in shown.trim_prefix("k:").split("|")): continue
+		if shown.begins_with("e:") and not String(e.get("element", "fire")) in shown.trim_prefix("e:").split("|"): continue
+		if shown.begins_with("f:") and not String((load(MAGIC_STAGE).cast_spec(e) as Dictionary).path) in shown.trim_prefix("f:").split("|"): continue
 		match key:
 			"palette": _row(_inspector, field[1], _options(PALETTES, PALETTES.find(String(e.get("palette", "normal"))), func(i: int) -> void: _set_field("palette", PALETTES[i])))
 			"claw": _row(_inspector, field[1], _options(CLAW_NAMES, CLAW_KINDS.find(String(e.get("claw", "arc"))), func(i: int) -> void:
 				_set_field("claw", CLAW_KINDS[i])
 				_refresh_inspector()))
+			"element": _row(_inspector, field[1], _options(ELEMENT_NAMES, ELEMENTS.find(String(e.get("element", "fire"))), func(i: int) -> void:
+				_set_field("element", ELEMENTS[i])
+				_refresh_inspector()))
+			"start", "end", "path":
+				var options: Array = CAST_OPTIONS[key]
+				var current := String((load(MAGIC_STAGE).cast_spec(e) as Dictionary)[key])
+				_row(_inspector, field[1], _options(options[1], (options[0] as Array).find(current), func(i: int) -> void:
+					_set_field(key, options[0][i])
+					_refresh_inspector()))
 			"finisher":
 				var check := CheckBox.new()
 				check.button_pressed = bool(e.get("finisher", false))
@@ -606,12 +686,14 @@ func _refresh_inspector() -> void:
 						line.add_child(spin)
 					_row(_inspector, field[1], line)
 				else:
-					var value := float(e.get(key, field[5]))
-					var integer := float(field[4]) >= 1.0 and key in ["fingers"]
+					var value := _cast_value(e, key, float(field[5])) if String(e.do) == "cast" else float(e.get(key, field[5]))
+					var integer := float(field[4]) >= 1.0 and key in ["fingers", "count"]
 					_row(_inspector, field[1], _spin(field[2], field[3], field[4], value, func(v: float) -> void: _set_field(key, int(v) if integer else v)))
 	if String(e.do) == "slash":
 		var align := _button("对齐命中到刀光扫到目标的时刻", _align_hit)
 		_inspector.add_child(align)
+	if String(e.do) == "cast":
+		_inspector.add_child(_button("对齐命中到每个落点（不够会自动补）", _align_hit))
 	_filling = false
 
 func _refresh_check() -> void:
@@ -627,6 +709,12 @@ func _refresh_check() -> void:
 		var contact := _contact_time(e)
 		var near := events.any(func(h: Dictionary) -> bool: return String(h.do) == "hit" and absf(float(h.t) - contact) < 0.03)
 		if not near: lines.append("⚠ %.3fs 的斩击扫到目标约在 %.3fs，附近没有命中（选中它按「对齐命中」）" % [float(e.t), contact])
+	# Casts whose projectiles land with no hit near that moment.
+	for e: Dictionary in events:
+		if String(e.do) != "cast": continue
+		for landing: float in load(MAGIC_STAGE).contact_times(e):
+			if not events.any(func(h: Dictionary) -> bool: return String(h.do) == "hit" and absf(float(h.t) - landing) < 0.03):
+				lines.append("⚠ %.3fs 的施法在 %.3fs 落到目标，附近没有命中（选中它按「对齐命中」）" % [float(e.t), landing])
 	if selected >= 0 and selected < events.size() and String(events[selected].do) == "slash":
 		lines.append("选中斩击：建议命中时间 %.3fs" % _contact_time(events[selected]))
 	_check.text = "\n".join(lines)

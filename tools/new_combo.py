@@ -36,7 +36,11 @@ THICKNESS = {"thin": 0.6, "medium": 1.0, "normal": 1.0, "bold": 1.4}
 HEX = re.compile(r"^#?[0-9a-fA-F]{6}$")
 ROLES = {"background", "ground", "outline", "flash", "dummy", "dummy_band", "blade", "marker_core", "text", "text_gold"}
 PALETTES = {"normal", "violet", "red", "gold", "green"}
-EVENTS = {"slash", "move", "hit", "charge", "flash_step", "cut"}
+EVENTS = {"slash", "move", "hit", "charge", "flash_step", "cut", "cast"}
+# cast (the magic renderer, "renderer": "magic"): what it is and how it travels.
+ELEMENTS = {"fire", "thunder", "ice", "wind"}
+CAST_CHOICES = {"start": {"hand", "above", "sky", "behind", "self", "below", "target"}, "end": {"target", "ground", "self"},
+                "path": {"straight", "arc", "wave", "spiral", "stay"}}
 
 
 def hex6(value: str) -> str:
@@ -70,6 +74,12 @@ def check_combo(combo: dict) -> int:
             raise SystemExit(f"{where}: palette must be one of {', '.join(sorted(PALETTES))}")
         if "by" in e and not (isinstance(e["by"], list) and len(e["by"]) == 2):
             raise SystemExit(f"{where}: \"by\" must be [x, y]")
+        if e["do"] == "cast":
+            if e.get("element", "fire") not in ELEMENTS:
+                raise SystemExit(f"{where}: element must be one of {', '.join(sorted(ELEMENTS))}")
+            for key, choices in CAST_CHOICES.items():
+                if key in e and e[key] not in choices:
+                    raise SystemExit(f"{where}: {key} must be one of {', '.join(sorted(choices))}")
     hits = sum(1 for e in events if e["do"] == "hit")
     if hits == 0:
         raise SystemExit("combo.json has no \"hit\" event")

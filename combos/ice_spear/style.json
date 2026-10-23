@@ -1,0 +1,19 @@
+{
+  "title": "冰 · 魔法绘制器",
+  "language": "zh",
+  "renderer": "magic",
+  "thickness": 1.0,
+  "pixel": 3,
+  "colors": {
+    "background": "0e141c",
+    "ground": "3c5068",
+    "outline": "05080d",
+    "dummy": "56636e",
+    "dummy_band": "2c353d",
+    "flash": "ffffff",
+    "blade": "dff4ff",
+    "marker_core": "8fd8ff",
+    "text": "e2f2ff",
+    "text_gold": "ffe98a"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "title": "闪电 · 魔法绘制器",
+  "language": "zh",
+  "renderer": "magic",
+  "thickness": 1.0,
+  "pixel": 3,
+  "colors": {
+    "background": "0f111c",
+    "ground": "3a4060",
+    "outline": "05060d",
+    "dummy": "56636e",
+    "dummy_band": "2c353d",
+    "flash": "ffffff",
+    "blade": "d8f0ff",
+    "marker_core": "7fc8ff",
+    "text": "dfe8ff",
+    "text_gold": "ffe98a"
+  }
+}

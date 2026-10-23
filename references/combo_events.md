@@ -98,6 +98,102 @@ a slam finisher bites into the floor and cracks it to both sides. `combos/claw_c
 `combo.json` may also carry `"captions": [[t, "text"], ...]`, shown at the top left by this
 renderer.
 
+#### Magic renderer
+
+Set `"renderer": "magic"` in `style.json` to use `magic_stage.gd` for off-hand spells. It
+adds one event, `cast`; every other event works as usual. Magic is ranged, so this renderer
+stands the caster back at x 360 and the target off at x 840. It draws at full resolution
+with shaders (no pixel grain).
+
+A spell is a **skeleton** — start, end, path, blast radius, with the speed curve and timing
+as parameters — carrying a **body** dressed in **accessories** that follow the body's state.
+For fire (`vfx/magic/fire/`) the body is a churning fireball that gathers at the start and
+stretches into a comet with its speed; its accessories are sparks spiralling in while it
+gathers, a muzzle flash at launch, a flame trail, warped air behind it (longer the faster
+it flies), embers shed backwards, smoke left hanging on the path, its glow and an orange
+pool of light on the ground that grows as it comes low. On landing it explodes: a flash
+and light streak, a fireball that swells, lifts and burns out, a shockwave bending the air,
+embers that bounce, debris, a smoke column, and at the floor flames and a scorch mark; the
+target keeps burning.
+
+For thunder (`vfx/magic/thunder/`) the body is the trunk: a jagged channel along the path
+whose shape holds through the strike. It charges as a crackling orb at the start (sparks
+drawn in, small arcs spitting off it and lashing out, the air darkening; from the `sky` a
+storm cloud rolls in, lit from inside), sends a thin stepped leader down the path, then
+strikes: the whole channel at full power with branches, pulsing through re-strikes, small
+arcs crawling along it (thickest at the first stroke), its light everywhere and the screen
+whiting out, leaving a faint violet afterimage. On landing: a blue-white flash, arcs
+bursting out, sparks bouncing off the floor, a shockwave cracking the air, and at the floor
+a branching Lichtenberg scar that glows and cools to a dark mark; the target stays
+electrified (arcs over its body, white jolts).
+
+For ice (`vfx/magic/ice/`) the body is a clear, double-pointed six-sided crystal rolling
+about its long axis — the bigger, the slower — so the light slides from face to face
+(bright ridges, a specular glint, fractures inside; on the 炸裂 tier the world shows bent
+through it). **Ice never curves:** whatever `path` says, it flies dead straight. It
+crystallises in jumps (ice dust drifting in, frost creeping over the floor) and flies
+speeding up (`ease` 1.6), trailing thin wisps of cold air, glittering ice dust and streaks
+of cold air. On landing clear crystals burst out and shatter, chips tumble and roll (the
+small ones fastest) and settle glinting. The target is frozen: clear crystals shoot up
+from under its feet round it and it cannot slide until they burst; a finisher shatters
+them at once. Cast from `self` with a volley (`count`), the spears hang in a cloud behind
+the caster (as wide as `spread`) until the charge is over, then loose one after another —
+暴雨梨花. Staying put (`path: stay`, `start: target`), it is a ring of crystals hovering
+round the target and following it, pouring heavy cold mist; while it holds the target
+moves (knockback, flight, fall) at 0.3 of its speed, and at the last landing the crystals
+burst outwards (`ice/halo.gd`).
+
+For wind (`vfx/magic/wind/`) the body is a small white mass of air — soft billows churning
+round a bright heart, wrapped in two spinning white swirls — squashed long the faster it
+flies. Wind curves freely (default path `arc`, `ease` 0.85: it starts fast). Air spirals
+in while it gathers; in flight it sheds little puffs that swell and thin, faint streaks,
+a leaf or two, and dust off the floor when it skims low. On landing the puff bursts in a
+ring of white billows with a swirl spinning open and air streaking out; the target is
+buffeted by gusts. Staying put (`path: stay`, `start: target`), it is a tornado where the
+target stands — broad white bands winding up a funnel of billowing air, its axis writhing
+like a rope — that sweeps the target in and holds it up. Its force shows in its shape:
+before each landing it winds up tight and stiff, at the landing it lashes (flares, shoots
+taller, spins harder, whips, bursts dust off its foot), and at the last landing it blows
+apart (`wind/tornado.gd`).
+
+`cast` — a spell from the caster:
+
+| Field | Meaning | Default (fire / thunder; ice in `ice.gd`) |
+|---|---|---|
+| `element` | `fire`, `thunder`, `ice` or `wind` | fire |
+| `start` | `hand`; `above` the caster's head; `sky` high over the target; `behind` above and behind the target (it swoops back); `self` the caster's body; `below` under the floor beneath the target | hand |
+| `end` | `target` (its body), `ground` (the floor under it: the blast sits on the floor) or `self` (around the caster: the blast goes off there) | target |
+| `path` | `straight`; `arc` bowed by `arc` px; `wave` snaking `wave` px `turns` times; `spiral` corkscrewing in; `stay`: it stays at its start (riding along with it) for `travel` s and lands there | arc / straight |
+| `arc`, `wave`, `turns` | the path's bow / swing / number of swings | 70, 40, 2 / 40, 30, 2 |
+| `ease` | speed curve: 1 even, > 1 speeds up into the target, < 1 starts fast | 1.25 / 1 |
+| `charge` | seconds the body gathers at the start before it flies | 0.22 / 0.3 |
+| `travel` | flight seconds (thunder: the leader's run down the path) | 0.36 / 0.08 |
+| `count`, `interval`, `spread` | a volley: `count` bodies launched `interval` s apart, fanned `spread` px | 1, 0.12, 36 / 1, 0.14, 30 |
+| `radius` | the blast's reach at the end, px | 70 / 60 |
+| `size` | the body's size (× `style.thickness`) | 1 |
+| `hold` | thunder: seconds the strike keeps pulsing after it lands | — / 0.22 |
+| `jag` | thunder: how hard the channel zigzags (0 smooth … 0.8 wild) | — / 0.28 |
+
+**Body `i` lands at `t + charge + travel + interval × i`.** Pair one `hit` with each landing
+(the manual editor's 「对齐命中」 button does it). A hit within 0.09 s of a landing plays the
+element's impact and status instead of the stock star spark; hits that match no landing
+stay melee hits. A `finisher` hit also flares the whole screen.
+`combos/fire_fireball/`, `combos/thunder_bolt/`, `combos/ice_spear/` and `combos/wind_blade/` are complete examples.
+
+Two skeletons get a body of their own: **thunder with `path: stay`** is a shield of arcs
+around its start (start `self`, end `self`: around the caster, following it; it does no
+harm while it holds and bursts out to `radius` when it lands — `thunder/shield.gd`), and
+**fire from `start: below`** is a pillar of fire that erupts under the target and keeps
+burning: its `count` hits land `interval` apart while it burns and it burns on `hold` s
+after the last (`fire/pillar.gd`). `combos/magic_variants/` shows both.
+
+`style.json` `"magic_quality"` picks the tier, lightest first: `"retro"` 复古 (drawn in
+pixel grain at `style.pixel` with stepped light, like pixel art), `"balanced"` 均衡 (full
+resolution, about a third of the particles, smaller halos; for weak machines),
+`"ultimate"` 极致 (no screen-warping accessories — heat haze, shockwave refraction — and
+about half the particles) or `"explosive"` 炸裂 (default: everything above). Q cycles the
+tier while a demo runs.
+
 ### `move` — the attacker glides
 | Field | Meaning | Default |
 |---|---|---|
