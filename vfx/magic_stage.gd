@@ -45,7 +45,7 @@ const SHAPES := {
 ## Shapes that are one effect per body of a volley (the others stand for the whole cast).
 const PER_BODY := ["comet", "beam"]
 ## Fields every cast has, whatever its element.
-const CAST_DEFAULTS := {"shape": "", "mix": [], "linger": 0.0, "burst": false, "swell": 1.0}
+const CAST_DEFAULTS := {"shape": "", "mix": [], "linger": 0.0, "fuse": 0.0, "burst": false, "swell": 1.0}
 const STARTS := ["hand", "above", "sky", "behind", "self", "below", "target"]
 const ENDS := ["target", "ground", "self"]
 const PATHS := ["straight", "arc", "wave", "spiral", "stay"]
@@ -230,8 +230,11 @@ func _fire(event: Dictionary) -> void:
 		for i in int(spec.count): fx.add_child(script.new().configure(spec.merged({"index": i, "seed_id": int(spec.seed_id) + i * 7}, true)))
 	else:
 		fx.add_child(script.new().configure(spec))
-	for time: float in contact_times(event):
-		_arrivals.append({"time": time, "spec": spec})
+	# Only bodies that come down on the target pair with hits: one ending at a point does not.
+	var times := contact_times(event)
+	for i in times.size():
+		if spec.end == "at" and (spec.ends as Array)[i % (spec.ends as Array).size()] is Array: continue
+		_arrivals.append({"time": times[i], "spec": spec})
 
 ## A body of cast `id` ends at `point` with a bang: the impacts of everything it is made of,
 ## and other casts' bodies lingering within reach go off too.
@@ -269,8 +272,9 @@ func _hit(event: Dictionary) -> void:
 		"self": at = attacker.position + Vector2(0, -4)
 	spec.merge({"finisher": finisher, "seed_id": hits * 17 + 3, "at": at}, true)
 	for part: Node in (ELEMENTS[spec.element] as GDScript).hit(spec):
-		# A bursting cast has played its impact where it ended already.
-		if bool(spec.burst) and part.get("part") == "impact":
+		# A cast that bursts as it lands has played its impact where it ended already (one
+		# that lingers first bursts later, so the hit still shows its own).
+		if bool(spec.burst) and float(spec.linger) <= 0.0 and part.get("part") == "impact":
 			part.free()
 			continue
 		# One status per element on the target: a new hit restarts it.

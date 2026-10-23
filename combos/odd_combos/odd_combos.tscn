@@ -4,5 +4,5 @@
 
 [node name="ComboPlayer" type="Node2D"]
 script = ExtResource("1")
-combo_file = "res://combos/elementalist/combo.json"
-style_file = "res://combos/elementalist/style.json"
+combo_file = "res://combos/odd_combos/combo.json"
+style_file = "res://combos/odd_combos/style.json"

@@ -224,13 +224,14 @@ follow their actors. Coordinates refer to the stage before camera zoom.
 | Field | Meaning | Default |
 |---|---|---|
 | `linger` | Seconds a projectile stays at its endpoint after landing | 0 |
+| `fuse` | Seconds a lingering body takes to go off once another cast's burst sets it off; a row of bodies from two interleaved casts then goes off one after another | 0 |
 | `burst` | Burst at its end, including every mixed material; nearby lingering bodies of other casts detonate early | false |
 | `swell` | Shared shapes / wind tornado: end size multiplier; below 1 contracts, above 1 expands | 1 |
 
 Scenery and coordinate bursts can be composed without `hit` events. Target damage / hit
 counter bookkeeping still requires a paired `hit`; `burst` alone does not count a hit.
 Stationary whole-volley shapes burst once at their final landing. See
-[`combos/elementalist/`](../combos/elementalist/README.md) for the complete showcase.
+[`combos/element_master/`](../combos/element_master) for the complete showcase.
 
 ### `camera` — ease the view
 

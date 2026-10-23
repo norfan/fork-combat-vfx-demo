@@ -104,7 +104,7 @@ def check_combo(combo: dict) -> int:
                 raise SystemExit(f"{where}: unknown magic shape")
             if not isinstance(e.get("mix", []), list) or any(not isinstance(x, str) or x not in ELEMENTS for x in e.get("mix", [])):
                 raise SystemExit(f"{where}: mix must be a list of known elements")
-            for key in ("charge", "travel", "interval", "radius", "hold", "linger"):
+            for key in ("charge", "travel", "interval", "radius", "hold", "linger", "fuse"):
                 if key in e and (not number(e[key]) or e[key] < 0):
                     raise SystemExit(f"{where}: {key} must be a finite non-negative number")
             for key in ("size", "swell", "ease"):

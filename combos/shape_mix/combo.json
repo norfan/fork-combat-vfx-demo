@@ -1,0 +1,156 @@
+{
+  "name": "形状 × 材质",
+  "captions": [
+    [
+      0.1,
+      "彗星 × 沙：火球的形状，沙的材质"
+    ],
+    [
+      1.5,
+      "彗星 × 风，混入火和雷"
+    ],
+    [
+      3.0,
+      "光束 × 火"
+    ],
+    [
+      4.4,
+      "地柱 × 雷：从目标脚下冲起"
+    ],
+    [
+      6.3,
+      "漩涡 × 冰：卷起目标"
+    ],
+    [
+      8.6,
+      "环 × 火：绕着自己转，结束时爆开"
+    ]
+  ],
+  "events": [
+    {
+      "t": 0.1,
+      "do": "cast",
+      "element": "sand",
+      "shape": "comet",
+      "path": "arc",
+      "arc": 80,
+      "charge": 0.35,
+      "travel": 0.4
+    },
+    {
+      "t": 0.85,
+      "do": "hit",
+      "push": 40,
+      "stop": 0.05,
+      "shake": 4
+    },
+    {
+      "t": 1.5,
+      "do": "cast",
+      "element": "wind",
+      "shape": "comet",
+      "mix": [
+        "fire",
+        "thunder"
+      ],
+      "path": "wave",
+      "wave": 40,
+      "charge": 0.35,
+      "travel": 0.45,
+      "size": 1.2
+    },
+    {
+      "t": 2.3,
+      "do": "hit",
+      "push": 40,
+      "stop": 0.05,
+      "shake": 4
+    },
+    {
+      "t": 3.0,
+      "do": "cast",
+      "element": "fire",
+      "shape": "beam",
+      "charge": 0.4,
+      "travel": 0.14,
+      "hold": 0.45
+    },
+    {
+      "t": 3.54,
+      "do": "hit",
+      "push": 40,
+      "stop": 0.05,
+      "shake": 4
+    },
+    {
+      "t": 4.4,
+      "do": "cast",
+      "element": "thunder",
+      "start": "below",
+      "charge": 0.45,
+      "travel": 0.15,
+      "interval": 0.3,
+      "hold": 0.3
+    },
+    {
+      "t": 5.0,
+      "do": "hit",
+      "push": 40,
+      "stop": 0.05,
+      "shake": 4
+    },
+    {
+      "t": 5.3,
+      "do": "hit",
+      "push": 40,
+      "stop": 0.05,
+      "shake": 4
+    },
+    {
+      "t": 5.6,
+      "do": "hit",
+      "push": 40,
+      "stop": 0.05,
+      "shake": 4
+    },
+    {
+      "t": 6.3,
+      "do": "cast",
+      "element": "ice",
+      "shape": "vortex",
+      "start": "target",
+      "path": "stay",
+      "charge": 0.5,
+      "travel": 1.0,
+      "interval": 0.4
+    },
+    {
+      "t": 7.8,
+      "do": "hit",
+      "push": 40,
+      "stop": 0.05,
+      "shake": 4
+    },
+    {
+      "t": 8.2,
+      "do": "hit",
+      "push": 40,
+      "stop": 0.05,
+      "shake": 4
+    },
+    {
+      "t": 8.6,
+      "do": "cast",
+      "element": "fire",
+      "start": "self",
+      "end": "self",
+      "path": "stay",
+      "charge": 0.4,
+      "travel": 1.2,
+      "count": 2,
+      "interval": 0.4,
+      "burst": true,
+      "radius": 90
+    }
+  ]
+}

@@ -23,7 +23,7 @@ func _check() -> void:
 	fx.free()
 	var editor = load("res://editor.tscn").instantiate()
 	root.add_child(editor)
-	var index: int = editor._paths.find("res://combos/elementalist/combo.json")
+	var index: int = editor._paths.find("res://combos/element_master/combo.json")
 	assert(index >= 0)
 	editor._open(index)
 	var before: String = JSON.stringify(editor.data)

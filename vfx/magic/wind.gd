@@ -31,15 +31,15 @@ static func impact(spec: Dictionary) -> Array:
 
 # --- The material: how the shared shapes draw wind ----------------------------------------
 
-## A wisp of white air (now and then a leaf caught in it).
+## A streak of white air (now and then a leaf caught in it).
 static func mote(cv, at: Vector2, px: float, alpha: float, key: int, heading := Vector2.ZERO) -> void:
 	if alpha <= 0.0: return
 	var spin := float(cv.time) * 3.0 + key
 	if Arcs.hash01(key + 3) < 0.15:
 		cv.mist.append(Gusts.leaf_item(at, px * 4.0, spin * 2.0, spin * 3.0, Gusts.leaf_tone(Arcs.hash01(key + 4), alpha)))
 		return
-	var length := px * 6.0 + heading.length() * 0.02
-	cv.mist.append([Art.smoke(), at, Vector2(length, px * 4.0), heading.angle() if heading.length() > 1.0 else spin, Color(0.95, 0.98, 1.0, 0.4 * alpha)])
+	var length := px * 4.0 + heading.length() * 0.025
+	cv.light.append([Art.glow(), at, Vector2(length, px * 1.6), heading.angle() if heading.length() > 1.0 else spin, Color(0.9, 0.95, 1.0, 0.4 * alpha)])
 
 ## A band of moving air along `points`, its leading edge crisp.
 static func line(cv, points: PackedVector2Array, half: float, power: float, key: int, taper := 0.0) -> void:

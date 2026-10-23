@@ -6,6 +6,9 @@ extends Node2D
 ##
 ## Run flags (after `--`): --verify (headless self-test), --capture=FILE [--capture-at=S]
 ## (one screenshot, then quit; several times S,S,… save FILE_S.png each), --frames=DIR [--duration=S] (every frame, then quit).
+## For recording a clip with Godot's movie maker: --start-at=S (begin S seconds into the
+## combo) and --clean (no on-screen text), e.g.
+##   godot --path . SCENE --write-movie clip.avi --fixed-fps 60 --quit-after 300 -- --start-at=14 --clean
 
 @export_file("*.json") var combo_file := "":
 	set(value):
@@ -31,6 +34,10 @@ var capture_at := 0.5
 ## Seconds still to capture at, with --capture-at=S,S,…
 var capture_times: Array[float] = []
 var _many_captures := false
+## Seconds of the combo skipped before the first frame (--start-at=S), and whether the
+## on-screen text (help, captions, title, hit counter) is hidden (--clean): for recording.
+var start_at := 0.0
+var clean := false
 var frames_dir := ""
 var frames_duration := 4.0
 var _frame_index := 0
@@ -51,13 +58,24 @@ func _ready() -> void:
 		elif arg == "--verify": verify = true
 		elif arg.begins_with("--frames="): frames_dir = arg.trim_prefix("--frames=")
 		elif arg.begins_with("--duration="): frames_duration = float(arg.trim_prefix("--duration="))
+		elif arg.begins_with("--start-at="): start_at = float(arg.trim_prefix("--start-at="))
+		elif arg == "--clean": clean = true
 	_rebuild()
 	if Engine.is_editor_hint(): return
 	DisplayServer.window_set_title(ComboStyle.title)
 	if not frames_dir.is_empty(): DirAccess.make_dir_recursive_absolute(frames_dir)
-	var recording := verify or not capture_path.is_empty() or not frames_dir.is_empty()
+	var recording := verify or not capture_path.is_empty() or not frames_dir.is_empty() or OS.get_cmdline_args().has("--write-movie")
 	if recording: loop_pause = -1.0
 	if autoplay or recording: demo.play()
+	# Everything is a function of time, so stepping ahead quietly lands on the same frame.
+	var skipped := 0.0
+	while skipped < start_at:
+		demo.advance(1.0 / 60.0)
+		skipped += 1.0 / 60.0
+	if clean:
+		demo.overlay.visible = false
+		_overlay.visible = false
+		demo.counter.self_modulate = Color(1, 1, 1, 0)
 
 func _notification(what: int) -> void:
 	# Several combo scenes can be open in the editor and the style is static: reload ours

@@ -84,13 +84,30 @@ Do not change only the renderer name while keeping the old contact timing. See t
 
 ## Examples: prompt → result
 
-### Elementalist — [combos/elementalist](combos/elementalist/README.md)
+### Element master — [combos/element_master](combos/element_master)
 
-A roughly 29-second five-element showcase: magic circle, fireball crown, planted ice,
-sand-silk lattice, chained lightning and delayed bursts, mixed-material tornado,
-convergence and a charged finale. Generic `shape` × (`element` + `mix`) casts use coordinate
-lists, `linger`, `burst` and `swell`; `camera` events frame the charge. These fields are
-also editable in the manual editor. Spoken narration and kinetic titles belong to editing.
+A ~19-second five-element showcase following the script: circle → 火，起 (fire crown) →
+冰，落 (the crown freezes into spears that stick in the floor) → 雷，连 (one chained
+lightning cast setting the spears off) → 风，卷 (tornado carrying fire, ice and lightning) →
+沙，缚 (sand storm binding it) → 万象归一 (a long charge drawing every element into the
+fingertip, then one beam braided of all five that bursts with all five impacts). Generic
+`shape` × (`element` + `mix`) casts use coordinate lists, `linger`, `burst` and `swell`;
+`camera` events frame the charge. These fields are also editable in the manual editor.
+Spoken narration and kinetic titles belong to editing.
+
+### Odd combinations — [combos/odd_combos](combos/odd_combos)
+
+Nine combinations nobody asked for, to show how far the system goes: a fire-and-wind wheel
+riding along with the dashing caster, ice and fire sharing one spiral path (ice stays
+straight), a thunder-and-ice circle drawn on the enemy that bursts when complete, sixteen
+sand threads from every side, a domino row of fireballs from two interleaved casts set off
+one by one (`fuse`), a thunder tornado laced with sand, marching ice pillars, a cage of
+five-element rings and ice beams wrapped in lightning falling from the sky.
+
+### Shape × material — [combos/shape_mix](combos/shape_mix)
+
+The shared shapes in other elements' materials: a comet of sand, a wind comet mixed with
+fire and thunder, a fire beam, a thunder pillar, an ice vortex and a fire ring that bursts.
 
 Each folder in [combos/](combos) holds the prompt (`prompt.md`), the `combo.json` and
 `style.json` an agent wrote for it, and the scene.

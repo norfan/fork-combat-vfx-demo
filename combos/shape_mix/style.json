@@ -1,0 +1,19 @@
+{
+  "title": "形状 × 材质 · 魔法绘制器",
+  "language": "zh",
+  "renderer": "magic",
+  "thickness": 1.0,
+  "pixel": 3,
+  "colors": {
+    "background": "121016",
+    "ground": "3e3646",
+    "outline": "050407",
+    "dummy": "56636e",
+    "dummy_band": "2c353d",
+    "flash": "fffbe6",
+    "blade": "f4e2a8",
+    "marker_core": "e8c060",
+    "text": "f2ead8",
+    "text_gold": "ffe98a"
+  }
+}

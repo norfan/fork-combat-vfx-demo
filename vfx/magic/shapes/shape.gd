@@ -43,7 +43,9 @@ func gather(at: Vector2, k: float, key: int) -> void:
 	var span := minf(charge, 3.0)
 	var reach := (100.0 + 300.0 * span) * size
 	var cycle := clampf(charge * 0.5, 0.3, 1.1)
-	var many := mini(roundi((18.0 + 18.0 * span) * sqrt(float(materials.size())) * Art.density()), 140)
+	var many := mini(roundi((18.0 + 40.0 * span) * sqrt(float(materials.size())) * Art.density()), 260)
+	# The longer the charge, the bigger and brighter what streams in.
+	var px := (2.0 + 0.8 * span) * sqrt(size)
 	for j in many:
 		var phase := fposmod(age / cycle + rnd(key + j), 1.0)
 		var a0 := rnd(key + j + 300) * TAU
@@ -51,8 +53,13 @@ func gather(at: Vector2, k: float, key: int) -> void:
 		var angle := a0 + phase * 2.2
 		var dist := from * pow(1.0 - phase, 1.5) + 4.0 * size
 		var p := at + Vector2(cos(angle), sin(angle) * 0.8) * dist
-		var heading := Vector2(cos(angle + 2.0), sin(angle + 2.0) * 0.8) * from * 2.0
-		mat(j).mote(cv, p, 2.0 * sqrt(size), phase * (0.3 + 0.7 * k), key + j, heading)
+		var heading := (at - p).normalized().rotated(0.6) * from * 2.5 * (1.0 - phase)
+		mat(j).mote(cv, p, px, minf(phase * 1.6, 1.0) * (0.4 + 0.6 * k), key + j, heading)
+	# What has gathered glows at the point, brighter as it fills.
+	if span >= 0.9:
+		var tint: Color = mat(0).TINT
+		cv.light.append([Art.glow(), at, Vector2.ONE * (30.0 + 90.0 * k) * size, 0.0, Color(tint, 0.25 + 0.45 * k)])
+		cv.light.append([Art.glow(), at, Vector2.ONE * (8.0 + 22.0 * k) * size, 0.0, Color(1, 1, 1, 0.5 + 0.5 * k)])
 	darken(k)
 
 ## A long charge draws the light out of the stage (fading back fast after it).

@@ -25,6 +25,8 @@ extends Node2D
 ##   round) of points and names — a chain is one cast whose ends are the next starts.
 ##   linger  seconds a body stays at its end after landing (hanging, stuck in the floor);
 ##           while it lingers, another cast's burst near it sets it off early
+##   fuse    seconds a body that has been set off burns before it goes (0: at once), so
+##           a row of them goes off one after another like dominoes
 ##   burst   true: each body bursts where it ends (its element's impact, and each `mix`
 ##           element's) without hitting the target — on landing, or when its linger is up
 ##   mix     more elements the spell is made of (vfx/magic_stage.gd)
@@ -59,6 +61,7 @@ var spread := 0.0
 var radius := 70.0
 var hold := 0.0
 var linger := 0.0
+var fuse := 0.0
 var burst := false
 ## The points of a start or end given as a list ("at"): each a name or [x, y].
 var starts: Array = []
@@ -97,7 +100,7 @@ func lingering() -> bool: return linger > 0.0 and age >= land(index) and age < g
 
 ## Another cast's burst went off by it: it bursts now.
 func detonate() -> void:
-	if lingering(): _cut = age
+	if lingering() and _cut == INF: _cut = age + fuse
 
 ## A whole-volley effect's burst at `point` when its landing `t` has just passed.
 func burst_once(t: float, point: Vector2) -> void:
