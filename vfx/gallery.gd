@@ -17,6 +17,14 @@ func _ready() -> void:
 	heading.text = "Combat VFX demo — pick a combo (Esc in a combo comes back here)"
 	heading.add_theme_font_size_override("font_size", 26)
 	list.add_child(heading)
+	# Hand tuning: build a combo or fine-tune an existing one with a live preview.
+	var editor := Button.new()
+	editor.text = "手动精调 — 新建 / 修改连招"
+	editor.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	editor.custom_minimum_size = Vector2(420, 44)
+	editor.add_theme_font_size_override("font_size", 22)
+	editor.pressed.connect(get_tree().change_scene_to_file.bind("res://editor.tscn"))
+	list.add_child(editor)
 	for path in find_combos():
 		var button := Button.new()
 		button.text = path.get_file().get_basename().capitalize()

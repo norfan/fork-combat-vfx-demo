@@ -36,7 +36,15 @@ static func load_file(path: String) -> void:
 	if not parsed is Dictionary:
 		push_error("style.json is not a JSON object")
 		return
-	data = parsed
+	load_data(parsed)
+
+## The same for a style already in memory (the manual editor).
+static func load_data(style: Dictionary) -> void:
+	data = style
+	thickness = 1.0
+	pixel = 3.0
+	title = "Combo VFX demo"
+	language = "en"
 	thickness = float(data.get("thickness", thickness))
 	pixel = float(data.get("pixel", pixel))
 	title = String(data.get("title", title))

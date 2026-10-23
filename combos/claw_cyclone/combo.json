@@ -1,0 +1,270 @@
+{
+  "name": "裂魂爪 · 回环暴扣",
+  "captions": [
+    [
+      0.0,
+      "一 · 磨爪"
+    ],
+    [
+      0.34,
+      "二 · 横斩 / 反手横斩"
+    ],
+    [
+      0.96,
+      "三 · 突进"
+    ],
+    [
+      1.34,
+      "四 · 交叉斩"
+    ],
+    [
+      1.7,
+      "五 · 大回环"
+    ],
+    [
+      2.4,
+      "六 · 悬空撕扯"
+    ],
+    [
+      3.04,
+      "七 · 暴扣"
+    ]
+  ],
+  "events": [
+    {
+      "t": 0.05,
+      "do": "charge"
+    },
+    {
+      "t": 0.36,
+      "do": "slash",
+      "claw": "swipe",
+      "angle": 0,
+      "length": 320,
+      "bend": 0.12,
+      "width": 46,
+      "duration": 0.13,
+      "tail": 0.22,
+      "fingers": 3,
+      "spread": 17,
+      "palette": "normal"
+    },
+    {
+      "t": 0.425,
+      "do": "hit",
+      "push": 50,
+      "stop": 0.055,
+      "shake": 3,
+      "spark": 46,
+      "palette": "normal"
+    },
+    {
+      "t": 0.66,
+      "do": "slash",
+      "claw": "swipe",
+      "angle": 180,
+      "length": 320,
+      "bend": -0.1,
+      "width": 48,
+      "duration": 0.13,
+      "tail": 0.22,
+      "fingers": 3,
+      "spread": 17,
+      "palette": "red"
+    },
+    {
+      "t": 0.725,
+      "do": "hit",
+      "push": 40,
+      "stop": 0.055,
+      "shake": 3,
+      "spark": 48,
+      "palette": "red"
+    },
+    {
+      "t": 0.98,
+      "do": "slash",
+      "claw": "dash",
+      "past": 130,
+      "width": 52,
+      "duration": 0.16,
+      "contact": 0.6,
+      "tail": 0.24,
+      "fingers": 4,
+      "spread": 16,
+      "palette": "normal"
+    },
+    {
+      "t": 1.076,
+      "do": "hit",
+      "push": 200,
+      "stop": 0.08,
+      "shake": 5,
+      "spark": 60,
+      "palette": "normal"
+    },
+    {
+      "t": 1.36,
+      "do": "slash",
+      "claw": "cross",
+      "angle": 38,
+      "length": 250,
+      "width": 46,
+      "duration": 0.12,
+      "tail": 0.24,
+      "cross_delay": 0.08,
+      "fingers": 3,
+      "spread": 16,
+      "palette": "red"
+    },
+    {
+      "t": 1.42,
+      "do": "hit",
+      "push": 30,
+      "stop": 0.045,
+      "shake": 3,
+      "spark": 48,
+      "palette": "red"
+    },
+    {
+      "t": 1.5,
+      "do": "hit",
+      "push": 60,
+      "stop": 0.06,
+      "shake": 4,
+      "spark": 56,
+      "palette": "red"
+    },
+    {
+      "t": 1.72,
+      "do": "move",
+      "by": [
+        -80,
+        0
+      ],
+      "time": 0.12
+    },
+    {
+      "t": 1.88,
+      "do": "slash",
+      "claw": "arc",
+      "from": -150,
+      "to": 390,
+      "spiral": 0.3,
+      "contact": 0.6,
+      "width": 60,
+      "squash": 0.75,
+      "tilt": -10,
+      "duration": 0.44,
+      "tail": 0.34,
+      "fingers": 4,
+      "spread": 20,
+      "palette": "normal"
+    },
+    {
+      "t": 2.144,
+      "do": "hit",
+      "push": 20,
+      "stop": 0.08,
+      "shake": 5,
+      "spark": 64,
+      "palette": "normal",
+      "launch": -660
+    },
+    {
+      "t": 2.42,
+      "do": "move",
+      "by": [
+        25,
+        -120
+      ],
+      "time": 0.18
+    },
+    {
+      "t": 2.62,
+      "do": "slash",
+      "claw": "arc",
+      "from": -120,
+      "to": 110,
+      "width": 48,
+      "squash": 0.7,
+      "tilt": -25,
+      "duration": 0.13,
+      "tail": 0.2,
+      "fingers": 3,
+      "spread": 16,
+      "palette": "red"
+    },
+    {
+      "t": 2.685,
+      "do": "hit",
+      "push": 15,
+      "stop": 0.045,
+      "shake": 3,
+      "spark": 50,
+      "palette": "red",
+      "launch": -280
+    },
+    {
+      "t": 2.84,
+      "do": "slash",
+      "claw": "arc",
+      "from": 115,
+      "to": -125,
+      "width": 52,
+      "squash": 0.85,
+      "tilt": 20,
+      "duration": 0.13,
+      "tail": 0.2,
+      "fingers": 3,
+      "spread": 16,
+      "palette": "normal"
+    },
+    {
+      "t": 2.905,
+      "do": "hit",
+      "push": 10,
+      "stop": 0.05,
+      "shake": 3.5,
+      "spark": 54,
+      "palette": "normal",
+      "launch": -420
+    },
+    {
+      "t": 3.06,
+      "do": "charge"
+    },
+    {
+      "t": 3.32,
+      "do": "move",
+      "by": [
+        30,
+        120
+      ],
+      "time": 0.2
+    },
+    {
+      "t": 3.32,
+      "do": "slash",
+      "claw": "slam",
+      "contact": 0.45,
+      "width": 72,
+      "duration": 0.24,
+      "tail": 0.42,
+      "fingers": 4,
+      "spread": 24,
+      "palette": "gold"
+    },
+    {
+      "t": 3.428,
+      "do": "hit",
+      "push": 200,
+      "stop": 0.16,
+      "shake": 10,
+      "spark": 120,
+      "palette": "gold",
+      "launch": 1100,
+      "finisher": true
+    }
+  ]
+}

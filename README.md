@@ -13,13 +13,15 @@ plugins or autoloads — every effect is drawn in code.
 Import `project.godot` (Godot 4.3+) and press F5: the gallery lists every combo. Each combo
 is one scene, `combos/<name>/<name>.tscn`; open one to see its stage in the editor, F6 to
 play it on loop. Keys: 1/Space replay, 2 slow motion, R reset, Esc back to the gallery.
+The gallery's first entry, **手动精调** (`editor.tscn`), builds or edits combos by hand with a live preview.
 
 ```
 project.godot   main.tscn (gallery)
 vfx/            the effect code: combo_player.gd (scene root), combo_stage.gd (the combo and
                 the stock pixel renderer), pixel_slash.gd (pixel smears), combo_style.gd
                 (colours), gallery.gd; ink_stage.gd + ink_stroke.gd (the ink renderer);
-                ribbon_stage.gd + trajectory_ribbon.gd + trajectory_ribbon.gdshader (blade ribbons)
+                ribbon_stage.gd + trajectory_ribbon.gd + trajectory_ribbon.gdshader (blade ribbons);
+                claw_stage.gd + claw_rake.gd (claw marks); combo_editor.gd (the hand-tuning editor)
 combos/<name>/  <name>.tscn, combo.json (the events), style.json (the look), prompt.md
 styles/         style presets: default, ember, neon, ink
 tools/          new_combo.py, verify_combo.py, frames_to_gif.py, frames_to_review.py,
@@ -55,6 +57,7 @@ the move's name alone does not decide the renderer.
 |---|---|---|
 | Crescent | Broad cuts, sword-energy shapes, attacks with a strong complete silhouette | Omit `renderer`, or set it to `""` |
 | Blade ribbon | Weapon-following swings, consecutive clashes, spins, natural trailing and recovery | `"renderer": "ribbon"` |
+| Claw marks | Claws and rending: fanned crescent gashes with thin trails — horizontal swipes, dashes, cross slashes, rakes, big loops and slams — that scratch the target on every hit (see `combos/claw_cyclone`) | `"renderer": "claw"` |
 
 Specify your choice in the skill prompt, for example:
 

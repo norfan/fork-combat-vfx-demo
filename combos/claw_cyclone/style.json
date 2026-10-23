@@ -1,0 +1,39 @@
+{
+  "title": "裂魂爪 · 回环暴扣",
+  "language": "zh",
+  "renderer": "claw",
+  "thickness": 1.0,
+  "pixel": 3,
+  "palettes": {
+    "normal": [
+      "fff4ec",
+      "ff9a7a",
+      "d8344a",
+      "3d0a1c"
+    ],
+    "red": [
+      "ffeef6",
+      "ff7fb0",
+      "b8205e",
+      "3a0726"
+    ],
+    "gold": [
+      "fffbe2",
+      "ffd27a",
+      "f08a2c",
+      "5a1f08"
+    ]
+  },
+  "colors": {
+    "background": "140d16",
+    "ground": "5a3a4c",
+    "outline": "07040a",
+    "dummy": "4b5a66",
+    "dummy_band": "28323a",
+    "flash": "fff4ec",
+    "blade": "ff9a7a",
+    "marker_core": "d8344a",
+    "text": "f2dfe4",
+    "text_gold": "ffd27a"
+  }
+}

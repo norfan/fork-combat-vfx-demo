@@ -70,6 +70,34 @@ birth time, and thins/deletes old samples. It shares the stage action clock and
 checks the visible ribbon covers every hit point. `combos/rift_dancer/` is the
 complete nine-hit example; `combos/trajectory_slash/` is the single-cut study.
 
+#### Claw renderer
+
+Set `"renderer": "claw"` in `style.json` to use `claw_stage.gd`: every `slash` becomes a
+set of torn crescent gashes (needle tail, fat belly, razor tip, ragged edges) fanning out
+like a paw along one path, each followed by a thin trail; only the stretch just behind
+the heads shows, then the gashes erode from their tails. They are aimed so the strands cross the target at
+`slash.t + duration × contact` — pair each slash with a `hit` at that time. Every hit
+also scratches the target along the claw's direction (the marks ride its knockback), and
+a slam finisher bites into the floor and cracks it to both sides. `combos/claw_cyclone/` is the complete example.
+
+| Field | Meaning | Default |
+|---|---|---|
+| `claw` | `arc`: around the attacker using `from`/`to`/`squash`/`tilt` like a sword arc (any sweep: −90 → 270 is a full loop, more is several — 大回环; the gashes keep circling after the contact); `swipe`: 横斩, a wide shallow horizontal swipe (`angle` 0 forehand, 180 backhand, `length`, `bend`); `dash`: 突进, the attacker really lunges at the target with the claws out (stopping just short) and the gashes pierce `past` px beyond; `cross`: 交叉斩, two rakes in an X at `angle` and 180−`angle`, the second `cross_delay` s later — pair it with two hits; `rake`: a straight swipe through the target at `angle`; `slam`: 暴扣, a dive from high behind the target, through it, into the floor and a skid | arc |
+| `duration`, `tail` | seconds the strands take to run the path / linger afterwards | 0.16, 0.22 |
+| `contact` | fraction of `duration` at which the strands cross the target | 0.5 |
+| `spiral` | `arc` only: radius grows from ×(1−spiral) to ×(1+spiral) through the sweep (negative shrinks) | 0 |
+| `angle`, `length` | `rake` / `cross`: direction (degrees) and length (px); `swipe`: direction 0 or 180 and length (default 320) | 40, 230 |
+| `bend` | `swipe`: how much it bows upwards, × its length (negative bows down) | 0.12 |
+| `past` | `dash`: how far the gashes pierce beyond the target, px | 110 |
+| `cross_delay` | `cross`: seconds between the two strokes | 0.07 |
+| `mark`, `trail` | gash length along the path (px; 0 picks a natural length from the thickness — long paths are not stretched) and the seconds of travel the thin trail behind each gash covers | 0, 0.1 |
+| `fingers`, `spread` | number of strands and the gap between them at their widest (px) | 3, 18 |
+| `jag` | how torn the strands are, 0 clean … 1 ragged | 0.45 |
+| `width` | gash thickness at its belly is `width × 0.34` px (× `style.thickness`) | 44 |
+
+`combo.json` may also carry `"captions": [[t, "text"], ...]`, shown at the top left by this
+renderer.
+
 ### `move` — the attacker glides
 | Field | Meaning | Default |
 |---|---|---|

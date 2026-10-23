@@ -41,8 +41,12 @@ static func load_timeline(path: String) -> Array:
 	if not parsed is Dictionary or not (parsed as Dictionary).get("events") is Array:
 		push_error("combo.json needs an \"events\" array")
 		return []
+	return parse_events(parsed.events)
+
+## The same for an events array already in memory (the manual editor's live preview).
+static func parse_events(raw_events: Array) -> Array:
 	var events: Array = []
-	for raw: Variant in parsed.events:
+	for raw: Variant in raw_events:
 		var e: Dictionary = (raw as Dictionary).duplicate()
 		e.t = float(e.get("t", 0.0))
 		var defaults: Dictionary = EVENT_DEFAULTS.get(e.get("do", ""), {})
@@ -100,7 +104,8 @@ class Block extends Node2D:
 			draw_rect(Rect2(at + Vector2(0, size.y * 0.66), Vector2(size.x, 8)), ComboStyle.c("dummy_band"))
 
 func _ready() -> void:
-	TIMELINE = load_timeline(combo_file)
+	# The manual editor builds stages without a file and fills TIMELINE itself.
+	TIMELINE = load_timeline(combo_file) if not combo_file.is_empty() else []
 	_camera = Camera2D.new()
 	_camera.position = Vector2(640, 360)
 	add_child(_camera)

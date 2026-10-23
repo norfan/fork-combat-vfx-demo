@@ -12,13 +12,15 @@
 用 Godot 4.3+ 导入 `project.godot`，按 F5：画廊会列出所有连招。每组连招就是一个场景
 `combos/<名字>/<名字>.tscn`。在编辑器里打开场景就能看到舞台，按 F6 循环播放。
 按键：1 或空格重播，2 慢放，R 重置，Esc 回到画廊。
+画廊第一项是**手动精调**，可以自己编排新连招，也可以修改已有连招，见下文。
 
 ```
-project.godot   main.tscn（画廊）
+project.godot   main.tscn（画廊）  editor.tscn（手动精调）
 vfx/            特效代码：combo_player.gd（场景根节点）、combo_stage.gd（连招与默认像素绘制器）、
                 pixel_slash.gd（像素刀光）、combo_style.gd（配色）、gallery.gd；
                 ink_stage.gd + ink_stroke.gd（水墨绘制器）；
-                ribbon_stage.gd + trajectory_ribbon.gd + trajectory_ribbon.gdshader（轨迹刀光）
+                ribbon_stage.gd + trajectory_ribbon.gd + trajectory_ribbon.gdshader（轨迹刀光）；
+                claw_stage.gd + claw_rake.gd（爪痕）；combo_editor.gd（手动精调）
 combos/<名字>/  <名字>.tscn、combo.json（事件）、style.json（风格）、prompt.md（提示词）
 styles/         风格预设：default、ember、neon、ink
 tools/          new_combo.py、verify_combo.py、frames_to_gif.py、frames_to_review.py、
@@ -27,6 +29,19 @@ references/     combo_events.md（格式）、choreography.md（需求 → 事�
 media/          下面展示用的 GIF 和逐帧拼图
 SKILL.md        代理说明
 ```
+
+## 手动精调：自己编排、修改连招
+
+画廊 → **手动精调**（`editor.tscn`）。不经过代理，直接在画面里改：
+
+- **选连招**：上方下拉框选一套已有连招，或选「＋ 新建空白连招」。
+- **事件列表**（左）：按时间排好的全部事件，颜色区分斩击、命中、位移、蓄力、一闪、刀痕；下方可以添加、复制、删除。
+- **时间条**（中下）：每类事件一条轨道，**拖动圆点就能改时间**，黄线是播放位置。
+- **属性面板**（右）：上半是整套风格（标题、绘制器、粗细、像素颗粒、字幕），下半是选中事件的所有字段。只显示当前绘制器用得到的字段，比如选了爪痕绘制器才出现爪数、爪距、撕裂感。
+- **实时预览**（中上）：每次修改后自动重播。选中一次斩击，下方会提示“刀光扫到目标的时刻”；按「对齐命中到刀光扫到目标的时刻」，就把后面最近的命中挪过去。
+- **保存**：「保存」覆盖当前连招（第一次会把原文件备份成 `.bak`）；填新名字按「另存为」，会新建一套连招和场景，画廊里直接能打开，代理的检查工具也能照常用。
+
+按键：空格播放，2 慢放，Ctrl+S 保存，Ctrl+Z 撤销，Ctrl+Y / Ctrl+Shift+Z 重做，Delete 删除事件，Ctrl+D 复制，←/→ 微调时间（Shift ×5），Esc 返回（有未保存的修改要按两次）。
 
 ## 作为技能使用
 
@@ -49,6 +64,7 @@ SKILL.md        代理说明
 |---|---|---|
 | 月牙刀光 | 大范围斩击、剑气造型、强调完整轮廓的攻击 | 不写 `renderer`，或设为 `""` |
 | 轨迹刀光 | 贴着武器的挥砍、连续拼刀、旋转斩、需要自然拖尾和收尾的动作 | `"renderer": "ribbon"` |
+| 爪痕 | 兽爪、利爪、撕扯：几道扇形张开的月牙形撕裂爪痕带细拖尾，招式有横斩、突进、交叉斩、直抓、大回环、暴扣，打中会在目标身上留下抓痕 | `"renderer": "claw"` |
 
 使用技能时直接说明选择，例如：
 
@@ -67,6 +83,19 @@ SKILL.md        代理说明
 [事件格式](references/combo_events.md#sampled-trajectory-renderer)。
 
 ## 示例：提示词 → 效果
+
+### 裂魂爪 · 回环暴扣 · 爪痕 — [combos/claw_cyclone](combos/claw_cyclone)
+
+> 爪痕绘制器演示：横斩、反手横斩、突进、交叉斩、后撤接大回环螺旋挑空、空中撕扯、蓄力暴扣砸地留下地面爪痕。
+
+九击。**横斩**和**反手横斩**两道横向爪痕；**突进**整个人冲上去，四道爪痕刺穿目标；**交叉斩**两爪交成 X，目标身上留下 X 形抓痕；
+后撤一步接**大回环**：一圈半、半径越转越大的四爪螺旋把目标挑飞；追上去空中两抓；
+最后蓄力，金色四爪从高处**暴扣**穿过目标砸进地面，四爪扎进地面、碎石飞溅，地面向两侧裂开。
+
+每道爪痕都是月牙形的撕裂口子（细长尾、鼓起的爪腹、尖锐爪尖、毛糙边缘），扇形张开、长短不一、依次落下，后面带一条细拖尾。
+每次命中都会在目标身上留下顺着这一爪方向的抓痕。`style.json` 选择 `"renderer": "claw"`。
+
+![裂魂爪](media/claw_cyclone.gif)
 
 [combos/](combos) 下每个文件夹都有：提示词 `prompt.md`、代理据此写出的 `combo.json` 和 `style.json`，以及场景文件。
 
